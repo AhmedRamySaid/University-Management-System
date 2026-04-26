@@ -9,7 +9,7 @@ public class DatabaseManager {
 	private static final Dotenv dotenv = Dotenv.load();
 
 	private static final String URL = "jdbc:postgresql://" +
-			dotenv.get("PGHOST") + dotenv.get("PGDATABASE");
+			dotenv.get("PGHOST") + ":5432/" + dotenv.get("PGDATABASE");
 	private static final String USER = dotenv.get("PGUSER");
 	private static final String PASSWORD = dotenv.get("PGPASSWORD");
 

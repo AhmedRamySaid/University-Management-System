@@ -10,8 +10,8 @@ public class Main {
 
 		// Create a new student object
 		User newStudent = new User(
-				"Alice Smith",
-				"alice.smith@university.edu",
+				"Jane Smith",
+				"jane.smith@university.edu",
 				"MySecurePassword123!",
 				Role.STUDENT
 		);

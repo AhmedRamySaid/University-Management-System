@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import static ASU.CAIE.Database.PasswordUtils.hashPassword;
+
 public class UserDao {
 	public boolean createUser(User user) {
 		// tell Postgres to cast that string into ENUM type.
@@ -18,8 +20,8 @@ public class UserDao {
 			pstmt.setString(1, user.getName());
 			pstmt.setString(2, user.getEmail());
 
-			String dummyHashedPassword = hashPassword(user.getPassword());
-			pstmt.setString(3, dummyHashedPassword);
+			String hashedPassword = hashPassword(user.getPassword());
+			pstmt.setString(3, hashedPassword);
 
 			// sends the enum as a lowercase string
 			pstmt.setString(4, user.getRole().name().toLowerCase());
@@ -31,10 +33,5 @@ public class UserDao {
 			System.err.println("Database error: " + e.getMessage());
 			return false;
 		}
-	}
-
-	// todo: Implement hashing logic
-	private String hashPassword(String plainText) {
-		return plainText + "_hashed_safely";
 	}
 }
