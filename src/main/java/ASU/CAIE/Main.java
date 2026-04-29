@@ -12,13 +12,12 @@ public class Main {
 		User newStudent = new User(
 				"Jane Smith",
 				"jane.smith@university.edu",
-				"MySecurePassword123!",
 				Role.STUDENT
 		);
 
 		// Save to database
 		System.out.println("Attempting to create user...");
-		boolean isSuccess = userDao.createUser(newStudent);
+		boolean isSuccess = userDao.createUser(newStudent, "MyPassword123");
 
 		if (isSuccess) {
 			System.out.println("Success! User created in the database.");

@@ -1,15 +1,17 @@
 package ASU.CAIE.Database;
 
+import ASU.CAIE.Users.Role;
 import ASU.CAIE.Users.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static ASU.CAIE.Database.PasswordUtils.hashPassword;
 
 public class UserDao {
-	public boolean createUser(User user) {
+	public boolean createUser(User user, String password) {
 		// tell Postgres to cast that string into ENUM type.
 		String sql = "INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, ?::user_role)";
 
@@ -17,14 +19,14 @@ public class UserDao {
 		try (Connection conn = DatabaseManager.getConnection();
 			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-			pstmt.setString(1, user.getName());
-			pstmt.setString(2, user.getEmail());
+			pstmt.setString(1, user.GetName());
+			pstmt.setString(2, user.GetEmail());
 
-			String hashedPassword = hashPassword(user.getPassword());
+			String hashedPassword = hashPassword(password);
 			pstmt.setString(3, hashedPassword);
 
 			// sends the enum as a lowercase string
-			pstmt.setString(4, user.getRole().name().toLowerCase());
+			pstmt.setString(4, user.GetRole().name().toLowerCase());
 
 			int rowsInserted = pstmt.executeUpdate();
 			return rowsInserted > 0;
@@ -33,5 +35,34 @@ public class UserDao {
 			System.err.println("Database error: " + e.getMessage());
 			return false;
 		}
+	}
+
+	public User GetUser(String email) {
+		String sql = "SELECT name, email, password_hash, role FROM users WHERE email = ?";
+
+		try (Connection conn = DatabaseManager.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			pstmt.setString(1, email);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					User user = new User();
+					user.SetName(rs.getString("name"));
+					user.SetEmail(rs.getString("email"));
+
+					// Convert the DB string back to your Java Enum
+					// Assuming your Enum is named UserRole
+					String roleStr = rs.getString("role").toUpperCase();
+					user.SetRole(Role.valueOf(roleStr));
+
+					return user;
+				}
+			}
+		} catch (SQLException e) {
+			System.err.println("Database error while fetching user: " + e.getMessage());
+		}
+
+		return null;
 	}
 }
