@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 import static ASU.CAIE.Database.PasswordUtils.hashPassword;
 
@@ -37,7 +38,7 @@ public class UserDao {
 		}
 	}
 
-	public User GetUser(String email) {
+	public Optional<User> GetUser(String email) {
 		String sql = "SELECT name, email, password_hash, role FROM users WHERE email = ?";
 
 		try (Connection conn = DatabaseManager.getConnection();
@@ -56,13 +57,34 @@ public class UserDao {
 					String roleStr = rs.getString("role").toUpperCase();
 					user.SetRole(Role.valueOf(roleStr));
 
-					return user;
+					return Optional.of(user);
 				}
 			}
 		} catch (SQLException e) {
 			System.err.println("Database error while fetching user: " + e.getMessage());
 		}
 
-		return null;
+		return Optional.empty();
+	}
+
+	public boolean VerifyUserPassword(String email, String plainTextPassword) {
+		String sql = "SELECT password_hash FROM users WHERE email = ?";
+
+		try (Connection conn = DatabaseManager.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			pstmt.setString(1, email);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					String storedHash = rs.getString("password_hash");
+					return PasswordUtils.verifyPassword(plainTextPassword, storedHash);
+				}
+			}
+		} catch (SQLException e) {
+			System.err.println("Database error while verifying password: " + e.getMessage());
+		}
+
+		return false;
 	}
 }
