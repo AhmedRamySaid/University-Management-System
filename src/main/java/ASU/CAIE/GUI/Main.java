@@ -8,6 +8,6 @@ package ASU.CAIE.GUI;
  */
 public class Main {
     public static void main(String[] args) {
-        UMSPortal.main(args);
+        UMSPortal.launch(args);
     }
 }

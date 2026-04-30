@@ -101,10 +101,4 @@ public class UMSPortal extends Application {
 				"-fx-border-radius: 12;" +
 				"-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 24, 0, 0, 4);";
 	}
-
-	// ── Entry point ───────────────────────────────────────────────────────────
-
-	public static void main(String[] args) {
-		launch(args);
-	}
 }
