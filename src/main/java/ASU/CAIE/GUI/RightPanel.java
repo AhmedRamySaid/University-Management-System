@@ -4,7 +4,6 @@ import ASU.CAIE.Users.Role;
 import ASU.CAIE.Users.User;
 import ASU.CAIE.Database.UserDao;
 import ASU.CAIE.util.SessionManager;
-import ASU.CAIE.util.SceneManager;
 import javafx.animation.*;
 import javafx.concurrent.Task;
 import javafx.geometry.*;
