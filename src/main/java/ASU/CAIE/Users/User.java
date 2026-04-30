@@ -1,6 +1,7 @@
 package ASU.CAIE.Users;
 
 public class User {
+	private int id;
 	private String email;
 	private Role role;
 	private String name;
@@ -8,9 +9,18 @@ public class User {
 
 	public User() { }
 
-	public User(String name, String email, Role role) {
+	public User(int id, String name, String email, Role role) {
+		this.id = id;
 		this.name = name;
 		this.email = email;
+		this.role = role;
+	}
+
+	public User(int id, String name, String email, String password, Role role) {
+		this.id = id;
+		this.name = name;
+		this.email = email;
+		this.password = password;
 		this.role = role;
 	}
 
@@ -22,19 +32,23 @@ public class User {
 	}
 
 	// Getters (DB branch)
+	public int GetId() { return id; }
 	public String GetName() { return name; }
 	public String GetEmail() { return email; }
 	public Role GetRole() { return role; }
 
 	// Getters (Login branch)
+	public int getId() { return id; }
 	public String getName() { return name; }
 	public String getEmail() { return email; }
 	public String getPassword() { return password; }
 	public Role getRole() { return role; }
 
 	// Setters
+	public void SetId(int id) { this.id = id; }
 	public void SetName(String name) { this.name = name; }
 	public void SetEmail(String email) { this.email = email; }
 	public void SetRole(Role role) { this.role = role; }
+	public void setId(int id) { this.id = id; }
 	public void setPassword(String password) { this.password = password; }
 }

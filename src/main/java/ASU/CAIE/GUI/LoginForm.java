@@ -2,7 +2,6 @@ package ASU.CAIE.GUI;
 
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
@@ -12,15 +11,12 @@ import static ASU.CAIE.GUI.ThemeManager.*;
 
 public class LoginForm {
 
-    // ── Field refs (accessed by RightPanel for submit / tab-switch) ──────────
     private final TextField     lEmail;
     private final PasswordField lPw;
     private final Label         lEmailHint;
     private final Label         lPwHint;
+    private final VBox          form;
 
-    private final VBox form;
-
-    // Callback wired by RightPanel
     private Runnable onSwitchToSignup;
     private Runnable onSubmit;
 
@@ -60,7 +56,7 @@ public class LoginForm {
         Button ghost = ghostButton("No account? Register ↗");
         ghost.setOnAction(e -> { if (onSwitchToSignup != null) onSwitchToSignup.run(); });
 
-        addAll(form,
+        form.getChildren().addAll(
                 title, vspace(4), sub, vspace(20),
                 emailLbl, inputWrap(lEmail), lEmailHint, vspace(10),
                 pwLblRow, lPwRow, lPwHint, vspace(14),
@@ -68,20 +64,14 @@ public class LoginForm {
         );
     }
 
-    // ── Getters ───────────────────────────────────────────────────────────────
-
     public VBox     getNode()       { return form; }
     public String   getEmail()      { return lEmail.getText().trim(); }
     public String   getPassword()   { return lPw.getText(); }
     public Label    getEmailHint()  { return lEmailHint; }
     public Label    getPwHint()     { return lPwHint; }
 
-    // ── Callbacks ─────────────────────────────────────────────────────────────
-
     public void setOnSwitchToSignup(Runnable r) { onSwitchToSignup = r; }
     public void setOnSubmit(Runnable r)          { onSubmit = r; }
-
-    // ── Validation ────────────────────────────────────────────────────────────
 
     private void validateEmail() {
         String v = lEmail.getText().trim();
@@ -93,11 +83,5 @@ public class LoginForm {
             lEmailHint.setStyle("-fx-text-fill: #dc2626; -fx-font-size: 11px;");
             lEmailHint.setText("Enter a valid email address");
         }
-    }
-
-    // ── Helpers ───────────────────────────────────────────────────────────────
-
-    private static void addAll(VBox box, Node... nodes) {
-        box.getChildren().addAll(nodes);
     }
 }

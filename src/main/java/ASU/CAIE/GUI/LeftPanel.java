@@ -12,7 +12,7 @@ import static ASU.CAIE.GUI.ThemeManager.*;
 public class LeftPanel {
 
     public static StackPane build() {
-        boolean dark = ThemeManager.isDark();
+        boolean dark = isDark();
 
         StackPane pane = new StackPane();
         pane.setPrefWidth(240);

@@ -7,13 +7,17 @@ import java.sql.SQLException;
 
 public class Main {
 	public static void main(String[] args) {
-		// DB init: test connection on start
-		try (Connection conn = DatabaseManager.getConnection()) {
-			if (conn != null) {
-				System.out.println("Database connection established successfully.");
+		// DB init: test connection on start (only if not in mock mode)
+		if (!ASU.CAIE.config.AppConfig.USE_MOCK_DATA) {
+			try (Connection conn = DatabaseManager.getConnection()) {
+				if (conn != null) {
+					System.out.println("Database connection established successfully.");
+				}
+			} catch (SQLException e) {
+				System.err.println("Failed to connect to database on startup: " + e.getMessage());
 			}
-		} catch (SQLException e) {
-			System.err.println("Failed to connect to database on startup: " + e.getMessage());
+		} else {
+			System.out.println("Running in MOCK MODE - Database connection skipped.");
 		}
 
 		// Launch login scene

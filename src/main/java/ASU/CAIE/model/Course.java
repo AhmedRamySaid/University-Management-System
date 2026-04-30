@@ -1,0 +1,29 @@
+package ASU.CAIE.model;
+
+public class Course {
+    private int courseId;
+    private String name;
+    private int instructorId;
+    private String schedule;
+
+    public Course() {}
+
+    public Course(int courseId, String name, int instructorId, String schedule) {
+        this.courseId = courseId;
+        this.name = name;
+        this.instructorId = instructorId;
+        this.schedule = schedule;
+    }
+
+    public int getCourseId() { return courseId; }
+    public void setCourseId(int courseId) { this.courseId = courseId; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public int getInstructorId() { return instructorId; }
+    public void setInstructorId(int instructorId) { this.instructorId = instructorId; }
+
+    public String getSchedule() { return schedule; }
+    public void setSchedule(String schedule) { this.schedule = schedule; }
+}

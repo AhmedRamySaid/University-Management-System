@@ -15,21 +15,13 @@ import static ASU.CAIE.GUI.ThemeManager.*;
 
 public class SignupForm {
 
-    // ── Field refs ────────────────────────────────────────────────────────────
     private final TextField     sFn, sLn, sEmail;
     private final PasswordField sPw, sPw2;
+    private final Label         sNameHint, sEmailHint, sPwHint, sPw2Hint;
+    private final Rectangle     pwFill;
 
-    private final Label sNameHint, sEmailHint, sPwHint, sPw2Hint;
-
-    private final Rectangle pwFill;
-    private final Button[]  roleBtns = new Button[4];
-
-    private String  selectedRole  = "STUDENT";
     private boolean termsAccepted = false;
-
     private final VBox form;
-
-    // Callbacks
     private Runnable onSubmit;
 
     public SignupForm() {
@@ -56,9 +48,6 @@ public class SignupForm {
         sEmailHint = hintLabel("");
         sEmail.textProperty().addListener((o, ov, nv) -> validateEmail());
         sEmail.focusedProperty().addListener((o, ov, nv) -> { if (!nv) validateEmail(); });
-
-        // Role grid
-        GridPane roleGrid = buildRoleGrid();
 
         // Password + strength bar
         sPw    = passwordField("At least 8 characters");
@@ -93,18 +82,13 @@ public class SignupForm {
         Button createBtn = primaryButton("Create account");
         createBtn.setOnAction(e -> { if (onSubmit != null) onSubmit.run(); });
 
-        Label note = styledLabel("Account requires admin approval before activation", 11, text3());
-        note.setAlignment(Pos.CENTER);
-        note.setMaxWidth(Double.MAX_VALUE);
-
-        addAll(form,
+        form.getChildren().addAll(
                 title, vspace(4), sub, vspace(18),
                 nameRow, sNameHint, vspace(8),
                 formLabel("University email"), inputWrap(sEmail), sEmailHint, vspace(8),
-                formLabel("Role"), roleGrid, vspace(8),
                 formLabel("Password"), sPwRow, pwBar, sPwHint, vspace(8),
                 formLabel("Confirm password"), sPw2Row, sPw2Hint, vspace(10),
-                termsRow, vspace(6), createBtn, vspace(6), note
+                termsRow, vspace(6), createBtn, vspace(6)
         );
     }
 
@@ -116,7 +100,6 @@ public class SignupForm {
     public String  getEmail()        { return sEmail.getText().trim(); }
     public String  getPassword()     { return sPw.getText(); }
     public String  getPassword2()    { return sPw2.getText(); }
-    public String  getSelectedRole() { return selectedRole; }
     public boolean isTermsAccepted() { return termsAccepted; }
 
     public Label getNameHint()  { return sNameHint; }
@@ -125,70 +108,6 @@ public class SignupForm {
     public Label getPw2Hint()   { return sPw2Hint; }
 
     public void setOnSubmit(Runnable r) { onSubmit = r; }
-
-    // ── Role grid ─────────────────────────────────────────────────────────────
-
-    private GridPane buildRoleGrid() {
-        GridPane grid = new GridPane();
-        grid.setHgap(7); grid.setVgap(7);
-        grid.setMaxWidth(Double.MAX_VALUE);
-
-        String[] roles  = {"STUDENT","PROFESSOR","STAFF","ADMIN"};
-        String[] labels = {"Student","Professor","Staff","Admin"};
-
-        for (int i = 0; i < 4; i++) {
-            final String role = roles[i];
-            Button b = roleButton(labels[i], role.equals(selectedRole));
-            b.setMaxWidth(Double.MAX_VALUE);
-            GridPane.setHgrow(b, Priority.ALWAYS);
-            b.setOnAction(e -> {
-                selectedRole = role;
-                for (int j = 0; j < roleBtns.length; j++)
-                    styleRoleBtn(roleBtns[j], roles[j].equals(role));
-            });
-            roleBtns[i] = b;
-            grid.add(b, i % 2, i / 2);
-        }
-
-        ColumnConstraints cc = new ColumnConstraints();
-        cc.setPercentWidth(50);
-        ColumnConstraints cc2 = new ColumnConstraints();
-        cc2.setPercentWidth(50);
-        grid.getColumnConstraints().addAll(cc, cc2);
-        return grid;
-    }
-
-    private Button roleButton(String text, boolean selected) {
-        Button b = new Button(text);
-        b.setPrefHeight(34);
-        b.setCursor(Cursor.HAND);
-        styleRoleBtn(b, selected);
-        return b;
-    }
-
-    private void styleRoleBtn(Button b, boolean selected) {
-        if (selected) {
-            b.setStyle(
-                    "-fx-background-color: " + text() + ";" +
-                            "-fx-text-fill: "        + bg()   + ";" +
-                            "-fx-font-size: 12px;" +
-                            "-fx-background-radius: 8;" +
-                            "-fx-border-color: "     + text() + ";" +
-                            "-fx-border-width: 0.5;" +
-                            "-fx-border-radius: 8;"
-            );
-        } else {
-            b.setStyle(
-                    "-fx-background-color: " + bg()      + ";" +
-                            "-fx-text-fill: "        + text2()   + ";" +
-                            "-fx-font-size: 12px;" +
-                            "-fx-background-radius: 8;" +
-                            "-fx-border-color: "     + border2() + ";" +
-                            "-fx-border-width: 0.5;" +
-                            "-fx-border-radius: 8;"
-            );
-        }
-    }
 
     // ── Terms row ─────────────────────────────────────────────────────────────
 
@@ -212,7 +131,7 @@ public class SignupForm {
 
         chkBox.getChildren().addAll(chkBg, check);
 
-        Label lbl = styledLabel("I agree to the Terms of Service and Privacy Policy", 12, text2());
+        Label lbl = styledLabel("I agree to the Terms of Service", 12, text2());
         row.getChildren().addAll(chkBox, lbl);
 
         row.setOnMouseClicked(e -> {
@@ -278,11 +197,5 @@ public class SignupForm {
             sPw2Hint.setStyle("-fx-text-fill: #dc2626; -fx-font-size: 11px;");
             sPw2Hint.setText("Passwords do not match");
         }
-    }
-
-    // ── Helpers ───────────────────────────────────────────────────────────────
-
-    private static void addAll(VBox box, Node... nodes) {
-        box.getChildren().addAll(nodes);
     }
 }

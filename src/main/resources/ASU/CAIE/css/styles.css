@@ -1,0 +1,176 @@
+/* styles.css - Unified Theme System */
+
+.root {
+    /* Default: Light Mode */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f5;
+    --border-color: #b0b0b0;
+    --text-primary: #111111;
+    --text-secondary: #555555;
+    --text-muted: #888888;
+    --accent-color: #3498db;
+    --accent-hover: #2980b9;
+    --button-bg: #111111;
+    --button-text: #ffffff;
+    
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    font-family: "Segoe UI", Arial, sans-serif;
+    -fx-background-color: var(--bg-secondary);
+    background-color: var(--bg-secondary);
+}
+
+.root.dark-mode {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #252525;
+    --border-color: #4a4a4a;
+    --text-primary: #f0f0f0;
+    --text-secondary: #aaaaaa;
+    --text-muted: #666666;
+    --button-bg: #f0f0f0;
+    --button-text: #111111;
+}
+
+/* Core Components */
+
+.label {
+    -fx-text-fill: var(--text-primary);
+}
+
+.text-main { -fx-text-fill: var(--text-primary); }
+.text-sub  { -fx-text-fill: var(--text-secondary); }
+.text-hint { -fx-text-fill: var(--text-muted); }
+
+.input-field {
+    -fx-background-color: var(--bg-primary);
+    background-color: var(--bg-primary);
+    -fx-border-color: var(--border-color);
+    border-color: var(--border-color);
+    -fx-border-width: 0.5;
+    border-width: 0.5;
+    -fx-border-radius: 8;
+    border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: var(--text-primary);
+    -fx-prompt-text-fill: var(--text-muted);
+    -fx-padding: 10 12;
+    padding: 10 12;
+    -fx-font-size: 14px;
+    font-size: 14px;
+}
+
+.input-field:focused {
+    -fx-border-color: var(--text-primary);
+    border-color: var(--text-primary);
+    -fx-border-width: 1.0;
+    border-width: 1.0;
+}
+
+.btn-primary {
+    -fx-background-color: var(--button-bg);
+    background-color: var(--button-bg);
+    -fx-text-fill: var(--button-text);
+    -fx-font-weight: bold;
+    font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    cursor: hand;
+    -fx-padding: 10 20;
+    padding: 10 20;
+}
+
+.btn-primary:hover {
+    -fx-background-color: var(--accent-hover);
+    background-color: var(--accent-hover);
+    -fx-text-fill: white;
+}
+
+.btn-ghost {
+    -fx-background-color: transparent;
+    background-color: transparent;
+    -fx-border-color: var(--border-color);
+    border-color: var(--border-color);
+    -fx-border-width: 0.5;
+    border-width: 0.5;
+    -fx-border-radius: 8;
+    border-radius: 8;
+    -fx-text-fill: var(--text-secondary);
+    -fx-cursor: hand;
+    cursor: hand;
+}
+
+.btn-ghost:hover {
+    -fx-background-color: var(--bg-secondary);
+    background-color: var(--bg-secondary);
+}
+
+/* Dashboards */
+
+.dashboard-card {
+    -fx-background-color: var(--bg-primary);
+    background-color: var(--bg-primary);
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 4);
+    -fx-padding: 24;
+    padding: 24;
+}
+
+.dashboard-header {
+    -fx-font-size: 24px;
+    font-size: 24px;
+    -fx-font-weight: bold;
+    font-weight: bold;
+    -fx-text-fill: var(--text-primary);
+}
+
+.card-title {
+    -fx-font-size: 16px;
+    font-size: 16px;
+    -fx-font-weight: bold;
+    font-weight: bold;
+    -fx-text-fill: var(--text-secondary);
+}
+
+.card-value {
+    -fx-font-size: 32px;
+    font-size: 32px;
+    -fx-font-weight: bold;
+    font-weight: bold;
+    -fx-text-fill: var(--accent-color);
+}
+
+/* Header & Navigation */
+
+.dashboard-top-bar {
+    -fx-background-color: var(--bg-primary);
+    background-color: var(--bg-primary);
+    -fx-padding: 15;
+    padding: 15;
+    -fx-border-color: var(--border-color);
+    border-color: var(--border-color);
+    -fx-border-width: 0 0 0.5 0;
+    border-width: 0 0 0.5 0;
+}
+
+.button-mock {
+    -fx-background-color: #34495e;
+    background-color: #34495e;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    font-weight: bold;
+    -fx-background-radius: 6;
+}
+
+.button-theme-toggle {
+    -fx-background-color: var(--bg-secondary);
+    background-color: var(--bg-secondary);
+    -fx-text-fill: var(--text-primary);
+    -fx-border-color: var(--border-color);
+    border-color: var(--border-color);
+    -fx-border-width: 0.5;
+    border-width: 0.5;
+    -fx-border-radius: 6;
+    border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    cursor: hand;
+}

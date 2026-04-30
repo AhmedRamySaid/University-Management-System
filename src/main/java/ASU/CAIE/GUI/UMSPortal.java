@@ -1,5 +1,6 @@
 package ASU.CAIE.GUI;
 
+import ASU.CAIE.util.SceneManager;
 import javafx.animation.*;
 import javafx.application.Application;
 import javafx.geometry.*;
@@ -19,6 +20,7 @@ public class UMSPortal extends Application {
 	@Override
 	public void start(Stage stage) {
 		this.primaryStage = stage;
+		SceneManager.init(stage);
 		buildScene();
 
 		stage.setTitle("ASU CAIE · UMS Portal");
@@ -46,6 +48,8 @@ public class UMSPortal extends Application {
 		BorderPane.setAlignment(outerCard, Pos.CENTER);
 
 		Scene scene = new Scene(root, 820, 580);
+		// Load CSS for dashboard FXML views (the login is styled programmatically)
+		scene.getStylesheets().add(getClass().getResource("/ASU/CAIE/css/styles.css").toExternalForm());
 		primaryStage.setScene(scene);
 
 		// Fade-in
@@ -66,7 +70,7 @@ public class UMSPortal extends Application {
 		HBox card = new HBox();
 		card.setStyle(cardStyle());
 		card.setMinHeight(520);
-		card.setMaxWidth(820);           // card never wider than 820 px
+		card.setMaxWidth(820);
 
 		VBox rightNode = rightPanel.getNode();
 		HBox.setHgrow(rightNode, Priority.ALWAYS);
@@ -100,11 +104,5 @@ public class UMSPortal extends Application {
 				"-fx-border-width: 0.5;" +
 				"-fx-border-radius: 12;" +
 				"-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 24, 0, 0, 4);";
-	}
-
-	// ── Entry point ───────────────────────────────────────────────────────────
-
-	public static void main(String[] args) {
-		launch(args);
 	}
 }

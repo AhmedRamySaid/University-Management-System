@@ -15,6 +15,10 @@ public class UserDao {
 	
 	// From Login Branch
 	public boolean createUser(User user) {
+		if (ASU.CAIE.config.AppConfig.USE_MOCK_DATA) {
+			System.out.println("MOCK MODE: Simulating user registration for " + user.getEmail());
+			return true;
+		}
 		// tell Postgres to cast that string into ENUM type.
 		String sql = "INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, ?::user_role)";
 
@@ -68,7 +72,12 @@ public class UserDao {
 	}
 
 	public Optional<User> GetUser(String email) {
-		String sql = "SELECT name, email, password_hash, role FROM users WHERE email = ?";
+		if (ASU.CAIE.config.AppConfig.USE_MOCK_DATA) {
+			return ASU.CAIE.util.MockDataProvider.getAllMockUsers().stream()
+					.filter(u -> u.getEmail().equalsIgnoreCase(email))
+					.findFirst();
+		}
+		String sql = "SELECT id, name, email, password_hash, role FROM users WHERE email = ?";
 
 		try (Connection conn = DatabaseManager.getConnection();
 			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -78,6 +87,7 @@ public class UserDao {
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
 					User user = new User();
+					user.SetId(rs.getInt("id"));
 					user.SetName(rs.getString("name"));
 					user.SetEmail(rs.getString("email"));
 
@@ -97,6 +107,10 @@ public class UserDao {
 	}
 
 	public boolean VerifyUserPassword(String email, String plainTextPassword) {
+		if (ASU.CAIE.config.AppConfig.USE_MOCK_DATA) {
+			return ASU.CAIE.util.MockDataProvider.getAllMockUsers().stream()
+					.anyMatch(u -> u.getEmail().equalsIgnoreCase(email) && u.getPassword().equals(plainTextPassword));
+		}
 		String sql = "SELECT password_hash FROM users WHERE email = ?";
 
 		try (Connection conn = DatabaseManager.getConnection();

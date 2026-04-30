@@ -1,5 +1,10 @@
 package ASU.CAIE.GUI;
 
+import ASU.CAIE.Users.Role;
+import ASU.CAIE.Users.User;
+import ASU.CAIE.Database.UserDao;
+import ASU.CAIE.util.SessionManager;
+import ASU.CAIE.util.SceneManager;
 import javafx.animation.*;
 import javafx.concurrent.Task;
 import javafx.geometry.*;
@@ -190,23 +195,30 @@ public class RightPanel {
         }
         if (!ok) return;
 
-        Task<Boolean> task = new Task<Boolean>() {
+        // Background auth task
+        Task<User> task = new Task<>() {
             @Override
-            protected Boolean call() throws Exception {
-                ASU.CAIE.Database.UserDao userDao = new ASU.CAIE.Database.UserDao();
-                return userDao.VerifyUserPassword(email, pw);
+            protected User call() {
+                UserDao userDao = new UserDao();
+                if (userDao.VerifyUserPassword(email, pw)) {
+                    return userDao.GetUser(email).orElse(null);
+                }
+                return null;
             }
         };
 
         task.setOnSucceeded(e -> {
-            if (task.getValue()) {
+            User user = task.getValue();
+            if (user != null) {
                 toast.show("Login successful", true);
+                SessionManager.getInstance().login(user);
+                DashboardLauncher.launch(user);
             } else {
                 toast.show("Invalid credentials", false);
             }
         });
-        task.setOnFailed(e -> toast.show("Database error", false));
-        new Thread(task).start();
+        task.setOnFailed(e -> toast.show("Connection error", false));
+        runTask(task);
     }
 
     private void doSignup() {
@@ -239,33 +251,36 @@ public class RightPanel {
         }
         if (!ok) return;
 
-        String name = fn + " " + ln;
-        ASU.CAIE.Users.Role role = ASU.CAIE.Users.Role.valueOf(signupForm.getSelectedRole().toUpperCase());
-        ASU.CAIE.Users.User user = new ASU.CAIE.Users.User(name, email, pw, role);
+        User user = new User(fn + " " + ln, email, pw, Role.STUDENT);
 
-        Task<Boolean> task = new Task<Boolean>() {
+        Task<Boolean> task = new Task<>() {
             @Override
-            protected Boolean call() throws Exception {
-                ASU.CAIE.Database.UserDao userDao = new ASU.CAIE.Database.UserDao();
-                return userDao.createUser(user);
+            protected Boolean call() {
+                return new UserDao().createUser(user);
             }
         };
 
         task.setOnSucceeded(e -> {
             if (task.getValue()) {
                 toast.show("Registration successful", true);
-                PauseTransition pt = new PauseTransition(Duration.millis(1500));
-                pt.setOnFinished(ev -> switchTab(true));
-                pt.play();
+                SessionManager.getInstance().login(user);
+                DashboardLauncher.launch(user);
             } else {
                 toast.show("Registration failed (email might already exist)", false);
             }
         });
-        task.setOnFailed(e -> toast.show("Database error", false));
-        new Thread(task).start();
+        runTask(task);
     }
 
+    // ── Helpers ───────────────────────────────────────────────────────────────
 
+
+
+    private void runTask(Task<?> task) {
+        Thread t = new Thread(task);
+        t.setDaemon(true);
+        t.start();
+    }
 
     private static void setError(Label hint, String msg) {
         hint.setStyle("-fx-text-fill: #dc2626; -fx-font-size: 11px;");
