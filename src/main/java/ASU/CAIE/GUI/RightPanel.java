@@ -189,9 +189,6 @@ public class RightPanel {
             ok = false;
         }
         if (!ok) return;
-
-        String body = "{\"email\":\"" + Validators.esc(email) + "\",\"password\":\"" + Validators.esc(pw) + "\"}";
-        runTask(ApiService.buildTask("http://localhost:8080/api/login", body));
     }
 
     private void doSignup() {
@@ -223,37 +220,6 @@ public class RightPanel {
             ok = false;
         }
         if (!ok) return;
-
-        String name = fn + " " + ln;
-        String body = "{\"name\":\""  + Validators.esc(name)  + "\"," +
-                "\"email\":\"" + Validators.esc(email) + "\"," +
-                "\"password\":\"" + Validators.esc(pw) + "\"," +
-                "\"role\":\""  + signupForm.getSelectedRole() + "\"}";
-
-        Task<String> task = ApiService.buildTask("http://localhost:8080/api/register", body);
-        task.setOnSucceeded(e -> {
-            String msg = task.getValue();
-            if (msg.startsWith("SUCCESS")) {
-                toast.show(msg.replace("SUCCESS: ", ""), true);
-                PauseTransition pt = new PauseTransition(Duration.millis(1500));
-                pt.setOnFinished(ev -> switchTab(true));
-                pt.play();
-            } else {
-                toast.show(msg.replace("ERROR: ", ""), false);
-            }
-        });
-        task.setOnFailed(e -> toast.show("Cannot reach the server. Is the Java app running?", false));
-        new Thread(task).start();
-    }
-
-    private void runTask(Task<String> task) {
-        task.setOnSucceeded(e -> {
-            String msg = task.getValue();
-            if (msg.startsWith("SUCCESS")) toast.show(msg.replace("SUCCESS: ", ""), true);
-            else                           toast.show(msg.replace("ERROR: ", ""),   false);
-        });
-        task.setOnFailed(e -> toast.show("Cannot reach the server. Is the Java app running?", false));
-        new Thread(task).start();
     }
 
     private static void setError(Label hint, String msg) {

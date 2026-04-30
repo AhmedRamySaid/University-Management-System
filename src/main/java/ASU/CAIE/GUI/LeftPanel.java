@@ -22,18 +22,6 @@ public class LeftPanel {
                         "-fx-background-radius: 12 0 0 12;"
         );
 
-        // Decorative circle
-        Circle circle = new Circle(130);
-        circle.setFill(Color.web(dark ? "#161616" : "#1e1e1e"));
-        StackPane.setAlignment(circle, Pos.BOTTOM_LEFT);
-        circle.setTranslateX(-65);
-        circle.setTranslateY(65);
-
-        // Content
-        VBox content = new VBox();
-        content.setPadding(new Insets(28, 24, 28, 24));
-        content.setSpacing(0);
-
         // Top dot row
         HBox dotRow = new HBox(8);
         dotRow.setAlignment(Pos.CENTER_LEFT);
@@ -62,13 +50,6 @@ public class LeftPanel {
         Region spacer2 = new Region();
         VBox.setVgrow(spacer2, Priority.ALWAYS);
 
-        content.getChildren().addAll(
-                dotRow, spacer1, headline, spacer2,
-                styledLabel("Ain Shams University · 2026", 11, "#555555")
-        );
-
-        pane.getChildren().addAll(circle, content);
-        StackPane.setAlignment(content, Pos.CENTER_LEFT);
         return pane;
     }
 }
