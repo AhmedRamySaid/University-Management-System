@@ -1,11 +1,13 @@
 package ASU.CAIE.GUI.Panels;
 
 import ASU.CAIE.Database.DatabaseManager;
+import ASU.CAIE.GUI.Dashboards.DashboardLauncher;
 import ASU.CAIE.GUI.Forms.LoginForm;
 import ASU.CAIE.GUI.Forms.SignupForm;
 import ASU.CAIE.GUI.Helpers.Validators;
 import ASU.CAIE.model.Role;
 import ASU.CAIE.model.User;
+import ASU.CAIE.util.SessionManager;
 import javafx.animation.*;
 import javafx.geometry.*;
 import javafx.scene.*;
@@ -157,8 +159,11 @@ public class RightPanel {
 			return;
 		}
 
-		DatabaseManager.CurrentUser =
-				DatabaseManager.UserDaoInstance.GetUser(email).orElse(null);
+		User user = DatabaseManager.UserDaoInstance.GetUser(email).orElse(null);
+		if (user != null) {
+			SessionManager.getInstance().login(user);
+			DashboardLauncher.launch(user);
+		}
     }
 
     private void doSignup() {
@@ -199,7 +204,8 @@ public class RightPanel {
 			return;
 		}
 
-		DatabaseManager.CurrentUser = user;
+		SessionManager.getInstance().login(user);
+		DashboardLauncher.launch(user);
     }
 
     private static void setError(Label hint, String msg) {

@@ -2,6 +2,7 @@ package ASU.CAIE.GUI;
 
 import ASU.CAIE.GUI.Panels.LeftPanel;
 import ASU.CAIE.GUI.Panels.RightPanel;
+import ASU.CAIE.util.SceneManager;
 import javafx.animation.*;
 import javafx.application.Application;
 import javafx.geometry.*;
@@ -21,6 +22,7 @@ public class UMSPortal extends Application {
 	@Override
 	public void start(Stage stage) {
 		this.primaryStage = stage;
+		SceneManager.init(stage);
 		buildScene();
 
 		stage.setTitle("ASU CAIE · UMS Portal");

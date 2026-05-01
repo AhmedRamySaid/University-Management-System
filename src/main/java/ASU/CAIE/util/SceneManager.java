@@ -16,8 +16,8 @@ public class SceneManager {
     public static void init(Stage stage) {
         primaryStage = stage;
         // Cache the CSS path so every scene transition gets the same stylesheet
-        if (SceneManager.class.getResource("/ASU/CAIE/css/styles.css") != null) {
-            cssPath = SceneManager.class.getResource("/ASU/CAIE/css/styles.css").toExternalForm();
+        if (SceneManager.class.getResource("styles.css") != null) {
+            cssPath = SceneManager.class.getResource("styles.css").toExternalForm();
         }
     }
 
@@ -53,6 +53,7 @@ public class SceneManager {
             FadeTransition fadeOut = new FadeTransition(Duration.millis(200), oldRoot);
             fadeOut.setFromValue(1); fadeOut.setToValue(0);
 
+			//todo: amira fix exception bug
             fadeOut.setOnFinished(e -> existingScene.setRoot(newRoot));
 
             fadeOut.play();
