@@ -11,11 +11,9 @@ import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
 
-import static ASU.CAIE.GUI.Helpers.ComponentFactory.*;
 import static ASU.CAIE.GUI.Helpers.ThemeManager.*;
 
 public class RightPanel {
