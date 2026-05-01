@@ -22,4 +22,10 @@ public class User {
 	public void SetName(String name) { this.name = name; }
 	public void SetEmail(String email) { this.email = email; }
 	public void SetRole(Role role) { this.role = role; }
+
+	@Override
+	public String toString()
+	{
+		return "Name: " + name + ", Email: " + email + ", Role: " + role;
+	}
 }

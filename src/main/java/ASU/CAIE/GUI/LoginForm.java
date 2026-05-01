@@ -42,10 +42,8 @@ public class LoginForm {
         // Password
         HBox pwLblRow = new HBox();
         Label pwLbl   = formLabel("Password");
-        Label forgot  = styledLabel("Forgot password?", 12, text2());
-        forgot.setCursor(Cursor.HAND);
         HBox.setHgrow(pwLbl, Priority.ALWAYS);
-        pwLblRow.getChildren().addAll(pwLbl, forgot);
+        pwLblRow.getChildren().addAll(pwLbl);
 
         lPw     = passwordField("••••••••");
         lPwHint = hintLabel("");

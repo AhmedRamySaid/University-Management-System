@@ -1,7 +1,9 @@
 package ASU.CAIE.GUI;
 
+import ASU.CAIE.Database.DatabaseManager;
+import ASU.CAIE.Users.Role;
+import ASU.CAIE.Users.User;
 import javafx.animation.*;
-import javafx.concurrent.Task;
 import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -189,6 +191,16 @@ public class RightPanel {
             ok = false;
         }
         if (!ok) return;
+
+		boolean success = DatabaseManager.UserDaoInstance.VerifyUserPassword(email, pw);
+		if (!success) {
+			toast.show("Invalid email or password", false);
+			return;
+		}
+
+		DatabaseManager.CurrentUser =
+				DatabaseManager.UserDaoInstance.GetUser(email).orElse(null);
+		toast.show("Logged in as: " + DatabaseManager.CurrentUser, true);
     }
 
     private void doSignup() {
@@ -220,6 +232,17 @@ public class RightPanel {
             ok = false;
         }
         if (!ok) return;
+
+		User user = new User(fn + " " + ln, email, Role.STUDENT);
+		boolean success = DatabaseManager.UserDaoInstance.createUser(user, pw);
+
+		if (!success) {
+			toast.show("Failed to create user. Try again later", false);
+			return;
+		}
+
+		DatabaseManager.CurrentUser = user;
+		toast.show("Logged in as: " + DatabaseManager.CurrentUser, true);
     }
 
     private static void setError(Label hint, String msg) {
