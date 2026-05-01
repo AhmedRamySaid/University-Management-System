@@ -1,21 +1,25 @@
 package ASU.CAIE.Users;
 
 public class User {
-	private final String email;
-	private final Role role;
+	private String email;
+	private Role role;
 	private String name;
-	private String password;
 
-	public User(String name, String email, String password, Role role) {
+	public User() { }
+
+	public User(String name, String email, Role role) {
 		this.name = name;
 		this.email = email;
-		this.password = password;
 		this.role = role;
 	}
 
 	// Getters
-	public String getName() { return name; }
-	public String getEmail() { return email; }
-	public String getPassword() { return password; }
-	public Role getRole() { return role; }
+	public String GetName() { return name; }
+	public String GetEmail() { return email; }
+	public Role GetRole() { return role; }
+
+	// Setters
+	public void SetName(String name) { this.name = name; }
+	public void SetEmail(String email) { this.email = email; }
+	public void SetRole(Role role) { this.role = role; }
 }
