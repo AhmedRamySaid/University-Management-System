@@ -1,4 +1,4 @@
-package ASU.CAIE.Users;
+package ASU.CAIE.model;
 
 public enum Role {
 	STUDENT,

@@ -5,6 +5,9 @@ import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
+import static ASU.CAIE.GUI.Helpers.ThemeManager.bg;
+import static ASU.CAIE.GUI.Helpers.ThemeManager.text2;
+
 public class ComponentFactory {
 
     // ── Labels ────────────────────────────────────────────────────────────────
@@ -16,7 +19,7 @@ public class ComponentFactory {
     }
 
     public static Label formLabel(String text) {
-        Label l = styledLabel(text, 12, ThemeManager.text2());
+        Label l = styledLabel(text, 12, text2());
         l.setStyle(l.getStyle() + " -fx-font-weight: bold;");
         return l;
     }
@@ -47,7 +50,7 @@ public class ComponentFactory {
         PasswordField f = new PasswordField();
         f.setPromptText(placeholder);
         f.setStyle(
-                "-fx-background-color: " + ThemeManager.bg() + ";" +
+                "-fx-background-color: " + bg() + ";" +
                         "-fx-border-color: "      + ThemeManager.border2() + ";" +
                         "-fx-border-width: 0.5;" +
                         "-fx-border-radius: 8;" +
@@ -140,7 +143,7 @@ public class ComponentFactory {
         b.setCursor(Cursor.HAND);
         b.setStyle(
                 "-fx-background-color: transparent;" +
-                        "-fx-text-fill: "     + ThemeManager.text2() + ";" +
+                        "-fx-text-fill: "     + text2() + ";" +
                         "-fx-font-size: 13px;" +
                         "-fx-background-radius: 8;" +
                         "-fx-border-color: "  + ThemeManager.border2() + ";" +
@@ -185,10 +188,30 @@ public class ComponentFactory {
         return r;
     }
 
+	public static VBox dashboardCard(String title, String value, String color) {
+		VBox card = new VBox(8);
+		card.setPadding(new Insets(24));
+		card.setStyle(
+				"-fx-background-color: " + bg() + ";" +
+						"-fx-background-radius: 12;" +
+						"-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 15, 0, 0, 4);"
+		);
+		HBox.setHgrow(card, Priority.ALWAYS);
+
+		Label t = styledLabel(title, 14, text2());
+		t.setStyle(t.getStyle() + " -fx-font-weight: bold;");
+
+		Label v = styledLabel(value, 32, color);
+		v.setStyle(v.getStyle() + " -fx-font-weight: bold;");
+
+		card.getChildren().addAll(t, v);
+		return card;
+	}
+
     // ── Internal helpers ──────────────────────────────────────────────────────
 
     private static String inputStyle() {
-        return  "-fx-background-color: " + ThemeManager.bg() + ";" +
+        return  "-fx-background-color: " + bg() + ";" +
                 "-fx-border-color: "     + ThemeManager.border2() + ";" +
                 "-fx-border-width: 0.5;" +
                 "-fx-border-radius: 8;" +

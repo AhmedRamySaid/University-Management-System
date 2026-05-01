@@ -1,7 +1,9 @@
-package ASU.CAIE.Database;
+package ASU.CAIE.Database.Dao;
 
-import ASU.CAIE.Users.Role;
-import ASU.CAIE.Users.User;
+import ASU.CAIE.Database.DatabaseManager;
+import ASU.CAIE.Database.PasswordUtils;
+import ASU.CAIE.model.Role;
+import ASU.CAIE.model.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

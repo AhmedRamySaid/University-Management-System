@@ -4,7 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import ASU.CAIE.Users.User;
+import ASU.CAIE.Database.Dao.UserDao;
+import ASU.CAIE.model.User;
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class DatabaseManager {

@@ -1,4 +1,4 @@
-package ASU.CAIE.Users;
+package ASU.CAIE.model;
 
 public class User {
 	private String email;
@@ -17,6 +17,7 @@ public class User {
 	public String GetName() { return name; }
 	public String GetEmail() { return email; }
 	public Role GetRole() { return role; }
+	public int GetID() { return 0; } //todo: implement
 
 	// Setters
 	public void SetName(String name) { this.name = name; }
