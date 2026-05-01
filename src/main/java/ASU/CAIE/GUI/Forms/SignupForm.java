@@ -1,5 +1,6 @@
-package ASU.CAIE.GUI;
+package ASU.CAIE.GUI.Forms;
 
+import ASU.CAIE.GUI.Helpers.Validators;
 import javafx.animation.*;
 import javafx.geometry.*;
 import javafx.scene.*;
@@ -10,8 +11,8 @@ import javafx.scene.shape.*;
 import javafx.scene.text.*;
 import javafx.util.Duration;
 
-import static ASU.CAIE.GUI.ComponentFactory.*;
-import static ASU.CAIE.GUI.ThemeManager.*;
+import static ASU.CAIE.GUI.Helpers.ComponentFactory.*;
+import static ASU.CAIE.GUI.Helpers.ThemeManager.*;
 
 public class SignupForm {
 
@@ -19,7 +20,7 @@ public class SignupForm {
     private final TextField     sFn, sLn, sEmail;
     private final PasswordField sPw, sPw2;
 
-    private final Label sNameHint, sEmailHint, sPwHint, sPw2Hint;
+    private final Label sNameHint, sEmailHint, sPwHint, sPw2Hint, sTermsHint;
 
     private final Rectangle pwFill;
 
@@ -61,7 +62,7 @@ public class SignupForm {
         HBox sPwRow = passwordRow(sPw);
 
         Rectangle pwTrack = new Rectangle(0, 3);
-        pwTrack.setFill(Color.web(isDark() ? "#333333" : "#e0e0e0"));
+        pwTrack.setFill(Color.web("#e0e0e0"));
         pwTrack.setArcWidth(3); pwTrack.setArcHeight(3);
 
         pwFill = new Rectangle(0, 3);
@@ -82,6 +83,7 @@ public class SignupForm {
         sPw2.textProperty().addListener((o, ov, nv) -> validatePw2());
 
         // Terms
+		sTermsHint = hintLabel("");
         HBox termsRow = buildTermsRow();
 
         // Button
@@ -95,7 +97,7 @@ public class SignupForm {
                 formLabel("University email"), inputWrap(sEmail), sEmailHint, vspace(8),
                 formLabel("Password"), sPwRow, pwBar, sPwHint, vspace(8),
                 formLabel("Confirm password"), sPw2Row, sPw2Hint, vspace(10),
-                termsRow, vspace(6), createBtn, vspace(6)
+                termsRow, vspace(4), sTermsHint, vspace(8), createBtn, vspace(6)
         );
     }
 
@@ -113,6 +115,7 @@ public class SignupForm {
     public Label getEmailHint() { return sEmailHint; }
     public Label getPwHint()    { return sPwHint; }
     public Label getPw2Hint()   { return sPw2Hint; }
+	public Label getTermsHint()   { return sTermsHint; }
 
     public void setOnSubmit(Runnable r) { onSubmit = r; }
 

@@ -1,4 +1,4 @@
-package ASU.CAIE.GUI;
+package ASU.CAIE.GUI.Helpers;
 
 import java.util.regex.Pattern;
 

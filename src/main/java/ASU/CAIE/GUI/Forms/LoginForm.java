@@ -1,14 +1,14 @@
-package ASU.CAIE.GUI;
+package ASU.CAIE.GUI.Forms;
 
+import ASU.CAIE.GUI.Helpers.Validators;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 
-import static ASU.CAIE.GUI.ComponentFactory.*;
-import static ASU.CAIE.GUI.ThemeManager.*;
+import static ASU.CAIE.GUI.Helpers.ComponentFactory.*;
+import static ASU.CAIE.GUI.Helpers.ThemeManager.*;
 
 public class LoginForm {
 

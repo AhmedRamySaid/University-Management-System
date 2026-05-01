@@ -9,4 +9,7 @@ module UMS {
 	opens ASU.CAIE to javafx.fxml, javafx.graphics;
 	exports ASU.CAIE;
 	exports ASU.CAIE.GUI;
+	exports ASU.CAIE.GUI.Forms;
+	exports ASU.CAIE.GUI.Panels;
+	exports ASU.CAIE.GUI.Helpers;
 }

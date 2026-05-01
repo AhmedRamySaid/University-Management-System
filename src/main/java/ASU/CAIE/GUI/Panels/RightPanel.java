@@ -1,6 +1,9 @@
-package ASU.CAIE.GUI;
+package ASU.CAIE.GUI.Panels;
 
 import ASU.CAIE.Database.DatabaseManager;
+import ASU.CAIE.GUI.Forms.LoginForm;
+import ASU.CAIE.GUI.Forms.SignupForm;
+import ASU.CAIE.GUI.Helpers.Validators;
 import ASU.CAIE.Users.Role;
 import ASU.CAIE.Users.User;
 import javafx.animation.*;
@@ -12,18 +15,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
 
-import static ASU.CAIE.GUI.ComponentFactory.*;
-import static ASU.CAIE.GUI.ThemeManager.*;
+import static ASU.CAIE.GUI.Helpers.ComponentFactory.*;
+import static ASU.CAIE.GUI.Helpers.ThemeManager.*;
 
 public class RightPanel {
-
-    private final ToastManager toast;
 
     // Tab buttons
     private Button tabLogin, tabSignup;
 
     // Forms
-    private LoginForm  loginForm;
+    private LoginForm loginForm;
     private SignupForm signupForm;
 
     // Dark-toggle refs (rebuilt on theme change)
@@ -35,15 +36,11 @@ public class RightPanel {
     // Callback so UMSPortal can trigger a full theme rebuild
     private Runnable onThemeToggle;
 
-    public RightPanel(ToastManager toast) {
-        this.toast = toast;
+    public RightPanel() {
         panel = new VBox(0);
         panel.setPadding(new Insets(28, 36, 28, 36));
         panel.setStyle("-fx-background-color: " + bg() + "; -fx-background-radius: 0 12 12 0;");
         panel.setAlignment(Pos.TOP_LEFT);
-
-        HBox dmRow = buildDarkToggleRow();
-        dmRow.setPadding(new Insets(0, 0, 16, 0));
 
         HBox tabs = buildTabBar();
         tabs.setPadding(new Insets(0, 0, 20, 0));
@@ -63,47 +60,11 @@ public class RightPanel {
 
         StackPane formStack = new StackPane(loginNode, signupNode);
 
-        panel.getChildren().addAll(dmRow, tabs, formStack);
+        panel.getChildren().addAll(tabs, formStack);
     }
 
     public VBox getNode() { return panel; }
     public void setOnThemeToggle(Runnable r) { onThemeToggle = r; }
-
-    // ── Dark toggle ───────────────────────────────────────────────────────────
-
-    private HBox buildDarkToggleRow() {
-        HBox row = new HBox(7);
-        row.setAlignment(Pos.CENTER_RIGHT);
-        row.setCursor(Cursor.HAND);
-
-        dmLabel = styledLabel(isDark() ? "Dark" : "Light", 12, text2());
-
-        Rectangle track = new Rectangle(30, 17);
-        track.setArcWidth(17); track.setArcHeight(17);
-        track.setFill(Color.web(isDark() ? "#444444" : "#b0b0b0"));
-
-        trackThumb = new Circle(6.5, Color.WHITE);
-        trackThumb.setTranslateX(isDark() ? 6.5 : -6.5);
-
-        StackPane toggle = new StackPane(track, trackThumb);
-        row.getChildren().addAll(dmLabel, toggle);
-        row.setOnMouseClicked(e -> toggleDark());
-        return row;
-    }
-
-    private void toggleDark() {
-        // Animate thumb
-        TranslateTransition tt = new TranslateTransition(Duration.millis(200), trackThumb);
-        tt.setToX(isDark() ? -6.5 : 6.5);   // before toggle flip
-        tt.play();
-
-        ThemeManager.toggle();
-
-        dmLabel.setText(isDark() ? "Dark" : "Light");
-        dmLabel.setStyle("-fx-text-fill: " + text2() + "; -fx-font-size: 12px;");
-
-        if (onThemeToggle != null) onThemeToggle.run();
-    }
 
     // ── Tab bar ───────────────────────────────────────────────────────────────
 
@@ -194,13 +155,12 @@ public class RightPanel {
 
 		boolean success = DatabaseManager.UserDaoInstance.VerifyUserPassword(email, pw);
 		if (!success) {
-			toast.show("Invalid email or password", false);
+			setError(loginForm.getPwHint(),"Invalid email or password");
 			return;
 		}
 
 		DatabaseManager.CurrentUser =
 				DatabaseManager.UserDaoInstance.GetUser(email).orElse(null);
-		toast.show("Logged in as: " + DatabaseManager.CurrentUser, true);
     }
 
     private void doSignup() {
@@ -228,7 +188,7 @@ public class RightPanel {
             ok = false;
         }
         if (!signupForm.isTermsAccepted()) {
-            toast.show("Please accept the terms to continue", false);
+            setError(signupForm.getTermsHint(), "Please accept the terms to continue");
             ok = false;
         }
         if (!ok) return;
@@ -237,12 +197,11 @@ public class RightPanel {
 		boolean success = DatabaseManager.UserDaoInstance.createUser(user, pw);
 
 		if (!success) {
-			toast.show("Failed to create user. Try again later", false);
+			setError(signupForm.getPw2Hint(), "Failed to create user. Try again later");
 			return;
 		}
 
 		DatabaseManager.CurrentUser = user;
-		toast.show("Logged in as: " + DatabaseManager.CurrentUser, true);
     }
 
     private static void setError(Label hint, String msg) {

@@ -1,4 +1,4 @@
-package ASU.CAIE.GUI;
+package ASU.CAIE.GUI.Panels;
 
 import javafx.geometry.*;
 import javafx.scene.layout.*;
@@ -6,19 +6,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.*;
 
-import static ASU.CAIE.GUI.ComponentFactory.styledLabel;
-import static ASU.CAIE.GUI.ThemeManager.*;
+import static ASU.CAIE.GUI.Helpers.ComponentFactory.styledLabel;
 
 public class LeftPanel {
 
     public static StackPane build() {
-        boolean dark = ThemeManager.isDark();
-
         StackPane pane = new StackPane();
         pane.setPrefWidth(240);
         pane.setMinWidth(240);
         pane.setStyle(
-                "-fx-background-color: " + (dark ? "#0a0a0a" : "#111111") + ";" +
+                "-fx-background-color: " + ("#111111") + ";" +
                         "-fx-background-radius: 12 0 0 12;"
         );
 

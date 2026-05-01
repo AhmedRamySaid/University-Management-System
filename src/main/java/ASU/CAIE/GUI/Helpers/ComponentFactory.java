@@ -1,4 +1,4 @@
-package ASU.CAIE.GUI;
+package ASU.CAIE.GUI.Helpers;
 
 import javafx.geometry.*;
 import javafx.scene.*;
@@ -111,14 +111,14 @@ public class ComponentFactory {
     // ── Buttons ───────────────────────────────────────────────────────────────
 
     public static Button primaryButton(String text) {
-        boolean dark = ThemeManager.isDark();
+
         Button b = new Button(text);
         b.setPrefHeight(44);
         b.setMaxWidth(Double.MAX_VALUE);
         b.setCursor(Cursor.HAND);
         b.setStyle(
-                "-fx-background-color: " + (dark ? "#f0f0f0" : "#111111") + ";" +
-                        "-fx-text-fill: "        + (dark ? "#111111" : "#ffffff") + ";" +
+                "-fx-background-color: " + ("#111111") + ";" +
+                        "-fx-text-fill: "        + ( "#ffffff") + ";" +
                         "-fx-font-size: 14px;" +
                         "-fx-font-weight: bold;" +
                         "-fx-background-radius: 8;" +
@@ -126,10 +126,10 @@ public class ComponentFactory {
         );
         b.setOnMouseEntered(e -> b.setStyle(b.getStyle().replaceAll(
                 "-fx-background-color: [^;]+;",
-                "-fx-background-color: " + (dark ? "#d0d0d0" : "#2c2c2a") + ";")));
+                "-fx-background-color: " + ( "#2c2c2a") + ";")));
         b.setOnMouseExited(e -> b.setStyle(b.getStyle().replaceAll(
                 "-fx-background-color: [^;]+;",
-                "-fx-background-color: " + (dark ? "#f0f0f0" : "#111111") + ";")));
+                "-fx-background-color: " + ("#111111") + ";")));
         return b;
     }
 

@@ -1,5 +1,7 @@
 package ASU.CAIE.GUI;
 
+import ASU.CAIE.GUI.Panels.LeftPanel;
+import ASU.CAIE.GUI.Panels.RightPanel;
 import javafx.animation.*;
 import javafx.application.Application;
 import javafx.geometry.*;
@@ -8,7 +10,7 @@ import javafx.scene.layout.*;
 import javafx.stage.*;
 import javafx.util.Duration;
 
-import static ASU.CAIE.GUI.ThemeManager.*;
+import static ASU.CAIE.GUI.Helpers.ThemeManager.*;
 
 public class UMSPortal extends Application {
 
@@ -57,8 +59,7 @@ public class UMSPortal extends Application {
 	// ── Outer card ────────────────────────────────────────────────────────────
 
 	private HBox buildOuterCard() {
-		ToastManager toast      = new ToastManager(primaryStage);
-		RightPanel   rightPanel = new RightPanel(toast);
+		RightPanel rightPanel = new RightPanel();
 
 		// Wire theme-rebuild callback
 		rightPanel.setOnThemeToggle(this::rebuildTheme);
@@ -82,8 +83,7 @@ public class UMSPortal extends Application {
 
 		outerCard.getChildren().clear();
 
-		ToastManager toast      = new ToastManager(primaryStage);
-		RightPanel   rightPanel = new RightPanel(toast);
+		RightPanel   rightPanel = new RightPanel();
 		rightPanel.setOnThemeToggle(this::rebuildTheme);
 
 		VBox rightNode = rightPanel.getNode();
