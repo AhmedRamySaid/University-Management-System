@@ -1,5 +1,6 @@
 package ASU.CAIE.GUI.Views;
 
+import ASU.CAIE.Database.Dao.GradeDao;
 import ASU.CAIE.model.User;
 import ASU.CAIE.model.Grade;
 import ASU.CAIE.util.SessionManager;
@@ -77,31 +78,15 @@ public class GradingView {
         submitBtn.setMaxWidth(200);
         submitBtn.setOnAction(e -> {
             try {
-                int    studentId   = Integer.parseInt(fStudentId.getText().trim());
-                int    courseId    = Integer.parseInt(fCourseId.getText().trim());
-                int score          =  Integer.parseInt(fScore.getText().trim());
-                String semester    = fSemester.getText().trim();
-
-                // Validation
-                if (score < 0 || score > 100) {
-                    resultLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-size: 13px;");
-                    resultLabel.setText("Score must be between 0 and 100.");
-                    return;
-                }
-                if (semester.isEmpty()) {
-                    resultLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-size: 13px;");
-                    resultLabel.setText("Please enter the semester.");
-                    return;
-                }
-
+                int studentId = Integer.parseInt(fStudentId.getText().trim());
+                int courseId = Integer.parseInt(fCourseId.getText().trim());
+                double score = Double.parseDouble(fScore.getText().trim());
 
                 Grade grade = new Grade();
                 grade.setStudentId(studentId);
                 grade.setCourseId(courseId);
                 grade.setScore(score);
-                grade.setSemester(semester);
 
-				// todo: implement
                 boolean ok = true;
 
                 if (ok) {
@@ -117,9 +102,10 @@ public class GradingView {
                 }
 
             } catch (NumberFormatException ex) {
-                resultLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-size: 13px;");
-                resultLabel.setText("Please enter valid numeric values for ID and Score.");
+                resultLabel.setText("Invalid input format.");
             }
+
+
         });
 
         form.getChildren().addAll(
@@ -131,6 +117,7 @@ public class GradingView {
                 vspace(8),   submitBtn,
                 resultLabel
         );
+
 
         content.getChildren().addAll(header, form);
         return content;

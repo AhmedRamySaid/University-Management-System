@@ -6,7 +6,7 @@ public class Grade {
     private int gradeId;
     private int studentId;
     private int courseId;
-    private int score;
+	private double score;
 	private float gpa;
     private String letterGrade;
     private String semester;
@@ -32,11 +32,15 @@ public class Grade {
     public int getCourseId() { return courseId; }
     public void setCourseId(int courseId) { this.courseId = courseId; }
 
-    public int getScore() { return score; }
-    public void setScore(int score) { this.score = score; }
-
-    public String getLetterGrade() { return letterGrade; }
-
+    public double getScore() { return score; }
+	public void setScore(double score) {
+		this.score = score;
+		updateGrade(); // Automatically update letterGrade and gpa when score is set
+	}
+	public void setLetterGrade(String letterGrade) {
+		this.letterGrade = letterGrade;
+	}
+	public String getLetterGrade() { return letterGrade; }
     public String getSemester() { return semester; }
     public void setSemester(String semester) { this.semester = semester; }
 

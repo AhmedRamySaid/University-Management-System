@@ -1,5 +1,7 @@
 package ASU.CAIE.GUI.Views;
 
+import ASU.CAIE.Database.Dao.CourseDao;
+import ASU.CAIE.model.Role;
 import ASU.CAIE.model.User;
 import ASU.CAIE.model.Course;
 import ASU.CAIE.util.SessionManager;
@@ -27,16 +29,22 @@ public class CoursesView {
 
         User user = SessionManager.getInstance().getCurrentUser();
         if (user == null) return new Label("Not logged in");
+        CourseDao courseDao = new CourseDao();
+        List<Course> courses;
+
+        if (user.GetRole() == Role.PROFESSOR) {
+            // Fetches courses where professor_id matches the logged-in user[cite: 13, 16]
+            courses = courseDao.getCoursesByProfessor(user.GetID());
+        } else {
+            // Students see all courses available in the system[cite: 13, 16]
+            courses = courseDao.getAllCourses();
+        }
 
         Label title = styledLabel("Courses", 26, text());
         title.setStyle(title.getStyle() + " -fx-font-weight: bold;");
         Label sub = styledLabel("All courses associated with your account.", 14, text2());
 
 		//todo: implement
-        List<Course> courses = switch (user.GetRole()) {
-            case PROFESSOR -> new ArrayList<Course>();
-            default        -> new ArrayList<Course>();
-        };
 
         // Stats
         HBox stats = new HBox(16);
@@ -75,8 +83,10 @@ public class CoursesView {
         Label tableTitle = styledLabel("Course List", 17, text());
         tableTitle.setStyle(tableTitle.getStyle() + " -fx-font-weight: bold;");
         tableBox.getChildren().addAll(tableTitle, table);
+        table.getItems().setAll(courses);
 
         content.getChildren().addAll(title, sub, stats, tableBox);
+
         return content;
     }
 }
