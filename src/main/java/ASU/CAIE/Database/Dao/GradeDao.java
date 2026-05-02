@@ -9,14 +9,23 @@ import java.util.List;
 public class GradeDao {
     // Insert a new grade
     public boolean submitGrade(Grade grade) {
-        // Only inserting the 3 columns that exist in your table
-        String sql = "INSERT INTO student_grades (course_id, student_id, grade) VALUES (?, ?, ?)";
+		// INSERT if no grade exists for this student/course, UPDATE if one does (upsert)
+		String sql =
+				"""
+				INSERT INTO student_grades (course_id, student_id, grade)
+				VALUES (?, ?, ?)
+				ON CONFLICT (course_id, student_id)
+				DO UPDATE SET grade = EXCLUDED.grade
+				""";
+
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setInt(1, grade.getCourseId());
             stmt.setInt(2, grade.getStudentId());
-            stmt.setDouble(3, grade.getScore()); // Assuming 'grade' column stores the numeric score
+            stmt.setDouble(3, grade.getScore());
             return stmt.executeUpdate() > 0;
+
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -42,14 +51,5 @@ public class GradeDao {
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return grades;
-    }
-
-    // Helper method to determine letter grade
-    private String calculateLetterGrade(double score) {
-        if (score >= 90) return "A";
-        if (score >= 80) return "B";
-        if (score >= 70) return "C";
-        if (score >= 60) return "D";
-        return "F";
     }
 }

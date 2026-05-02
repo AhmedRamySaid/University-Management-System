@@ -41,7 +41,7 @@ public class UserDao {
 	}
 
 	public Optional<User> GetUser(String email) {
-		String sql = "SELECT name, email, password_hash, role FROM users WHERE email = ?";
+		String sql = "SELECT user_id, name, email, password_hash, role FROM users WHERE email = ?";
 
 		try (Connection conn = DatabaseManager.getConnection();
 			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -53,9 +53,9 @@ public class UserDao {
 					User user = new User();
 					user.SetName(rs.getString("name"));
 					user.SetEmail(rs.getString("email"));
+					user.SetID(rs.getInt("user_id"));
 
-					// Convert the DB string back to your Java Enum
-					// Assuming your Enum is named UserRole
+					// Convert the DB string back to Java Enum
 					String roleStr = rs.getString("role").toUpperCase();
 					user.SetRole(Role.valueOf(roleStr));
 

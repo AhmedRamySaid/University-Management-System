@@ -7,6 +7,7 @@ module UMS {
 	requires jbcrypt;
 
 	opens ASU.CAIE to javafx.fxml, javafx.graphics;
+	opens ASU.CAIE.model to javafx.base;
 	exports ASU.CAIE;
 	exports ASU.CAIE.GUI;
 	exports ASU.CAIE.GUI.Forms;
