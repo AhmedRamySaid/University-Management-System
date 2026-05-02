@@ -12,8 +12,12 @@ public class SceneManager {
 
     public static void init(Stage stage) {
         primaryStage = stage;
-        if (SceneManager.class.getResource("styles.css") != null) {
-            cssPath = SceneManager.class.getResource("styles.css").toExternalForm();
+        var res = SceneManager.class.getResource("/styles.css");
+        if (res != null) {
+            cssPath = res.toExternalForm();
+            System.out.println("CSS loaded OK");
+        } else {
+            System.err.println("CSS NOT FOUND");
         }
     }
 
