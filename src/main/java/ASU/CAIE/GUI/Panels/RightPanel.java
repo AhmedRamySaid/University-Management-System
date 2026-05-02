@@ -215,8 +215,13 @@ public class RightPanel {
             return;
         }
 
-        SessionManager.getInstance().login(user);
-        DashboardLauncher.launch(user);
+		// to make sure to get the new student ID
+		user = DatabaseManager.UserDaoInstance.GetUser(email).orElse(null);
+
+		if (user != null) {
+			SessionManager.getInstance().login(user);
+			DashboardLauncher.launch(user);
+		}
     }
 
     private static void setError(Label hint, String msg) {
