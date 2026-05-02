@@ -52,6 +52,9 @@ public class UMSPortal extends Application {
 		Scene scene = new Scene(root, 820, 580);
 		primaryStage.setScene(scene);
 
+		scene.getStylesheets().add(
+				getClass().getResource("/styles.css").toExternalForm()
+		);
 		// Fade-in
 		FadeTransition ft = new FadeTransition(Duration.millis(350), outerCard);
 		ft.setFromValue(0); ft.setToValue(1);
