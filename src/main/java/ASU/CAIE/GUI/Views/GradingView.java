@@ -82,23 +82,24 @@ public class GradingView {
                 int courseId = Integer.parseInt(fCourseId.getText().trim());
                 double score = Double.parseDouble(fScore.getText().trim());
 
+                // Create the Grade object[cite: 14]
                 Grade grade = new Grade();
                 grade.setStudentId(studentId);
                 grade.setCourseId(courseId);
-                grade.setScore(score);
+                grade.setScore((int) score);
+                grade.updateGrade();
 
-                boolean ok = true;
+                // --- START OF EDITS ---
+                GradeDao gradeDao = new GradeDao();
+                boolean success = gradeDao.submitGrade(grade); // Save to the 'grades' table
 
-                if (ok) {
-                    resultLabel.setStyle("-fx-text-fill: #2ecc71; -fx-font-size: 13px;");
-                    resultLabel.setText("Grade submitted successfully! (" + grade.getLetterGrade() + ")");
-                    // Clear form
-                    fStudentId.clear(); fCourseId.clear();
-                    fScore.clear(); fSemester.clear();
-                    lGradeOut.setText("—");
+                if (success) {
+                    resultLabel.setStyle("-fx-text-fill: #2ecc71;");
+                    resultLabel.setText("Success: Grade " + grade.getLetterGrade() + " assigned!");
+                    fStudentId.clear(); fCourseId.clear(); fScore.clear();
                 } else {
-                    resultLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-size: 13px;");
-                    resultLabel.setText("Failed to submit grade. Please try again.");
+                    resultLabel.setStyle("-fx-text-fill: #e74c3c;");
+                    resultLabel.setText("Database error: Could not save grade.");
                 }
 
             } catch (NumberFormatException ex) {
