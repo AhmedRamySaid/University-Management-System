@@ -1,5 +1,6 @@
 package ASU.CAIE.GUI.Views;
 
+import ASU.CAIE.model.Student;
 import ASU.CAIE.model.User;
 import ASU.CAIE.model.Grade;
 import ASU.CAIE.util.SessionManager;
@@ -13,7 +14,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static ASU.CAIE.GUI.Helpers.ComponentFactory.*;
@@ -27,10 +27,10 @@ public class GradesView {
 
         User user = SessionManager.getInstance().getCurrentUser();
         if (user == null) return new Label("Not logged in");
+		if (!(user instanceof Student student)) return new Label("Incorrect View");
 
-		//todo: implement
-        List<Grade> grades = new ArrayList<Grade>();
-        double gpa = 3.3;
+        List<Grade> grades = student.GetCourseGrades();
+        double gpa = student.CalculateGPA();
 
         // Header
         VBox header = new VBox(4);

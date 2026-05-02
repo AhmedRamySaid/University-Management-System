@@ -3,6 +3,7 @@ package ASU.CAIE.Database.Dao;
 import ASU.CAIE.Database.DatabaseManager;
 import ASU.CAIE.Database.PasswordUtils;
 import ASU.CAIE.model.Role;
+import ASU.CAIE.model.Student;
 import ASU.CAIE.model.User;
 
 import java.sql.Connection;
@@ -50,14 +51,16 @@ public class UserDao {
 
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
-					User user = new User();
+					User user;
+					// Convert the DB string back to Java Enum
+					Role role = Role.valueOf(rs.getString("role").toUpperCase());
+					if (role == Role.STUDENT) user = new Student();
+					else user = new User();
+
 					user.SetName(rs.getString("name"));
 					user.SetEmail(rs.getString("email"));
 					user.SetID(rs.getInt("user_id"));
-
-					// Convert the DB string back to Java Enum
-					String roleStr = rs.getString("role").toUpperCase();
-					user.SetRole(Role.valueOf(roleStr));
+					user.SetRole(role);
 
 					return Optional.of(user);
 				}

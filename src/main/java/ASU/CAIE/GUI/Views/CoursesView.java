@@ -1,6 +1,5 @@
 package ASU.CAIE.GUI.Views;
 
-import ASU.CAIE.Database.Dao.CourseDao;
 import ASU.CAIE.Database.DatabaseManager;
 import ASU.CAIE.model.Role;
 import ASU.CAIE.model.User;
@@ -16,7 +15,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static ASU.CAIE.GUI.Helpers.ComponentFactory.*;

@@ -41,8 +41,11 @@ public class Grade {
 		this.letterGrade = letterGrade;
 	}
 	public String getLetterGrade() { return letterGrade; }
+
     public String getSemester() { return semester; }
     public void setSemester(String semester) { this.semester = semester; }
+
+	public double getGPA() { return gpa; }
 
 	public void updateGrade() {
 		if (score == 0) {

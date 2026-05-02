@@ -1,5 +1,6 @@
 package ASU.CAIE.GUI.Dashboards;
 
+import ASU.CAIE.model.Student;
 import ASU.CAIE.model.User;
 import ASU.CAIE.model.Course;
 import ASU.CAIE.model.Grade;
@@ -26,12 +27,13 @@ public class StudentDashboardView {
         content.setPadding(new Insets(44, 48, 44, 48));
         content.setStyle("-fx-background-color: #f4f5f7;");
 
-        User user = SessionManager.getInstance().getCurrentUser();
-        if (user == null) return new Label("Not logged in");
+		User user = SessionManager.getInstance().getCurrentUser();
+		if (user == null) return new Label("Not logged in");
+		if (!(user instanceof Student student)) return new Label("Incorrect View");
 
-        double       gpa     = 3.3;
-        List<Course> courses = new ArrayList<>();
-        List<Grade>  grades  = new ArrayList<>();
+		double       gpa     = student.CalculateGPA();
+        List<Course> courses = student.GetTakenCourses();
+        List<Grade>  grades  = student.GetCourseGrades();
 
         // ── Header ──────────────────────────────────────────────────────────
         HBox header = new HBox(16);
