@@ -48,4 +48,35 @@ public class CourseDao {
         } catch (SQLException e) { e.printStackTrace(); }
         return courses;
     }
+
+	public List<Course> getCoursesByStudent(int studentId) {
+		List<Course> courses = new ArrayList<>();
+		// SQL Join: Get course details where the student has an entry in the grades table
+		String sql = "SELECT c.course_id, c.name, c.professor_id " +
+				"FROM courses c " +
+				"JOIN student_grades g ON c.course_id = g.course_id " +
+				"WHERE g.student_id = ?";
+
+		try (Connection conn = DatabaseManager.getConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+			stmt.setInt(1, studentId);
+			ResultSet rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				// Mapping the database columns to your Course model[cite: 8, 13]
+				Course course = new Course(
+						rs.getInt("course_id"),
+						rs.getString("name"),
+						rs.getInt("professor_id"),
+						"TBD", // Placeholder for department/description if not in DB
+						0      // Placeholder for credits
+				);
+				courses.add(course);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return courses;
+	}
 }

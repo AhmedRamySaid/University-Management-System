@@ -1,10 +1,14 @@
 package ASU.CAIE.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
 	private String email;
 	private Role role;
 	private String name;
 	private int ID;
+	private List<Course> takenCourses;
 
 	public User() { }
 
@@ -19,12 +23,17 @@ public class User {
 	public String GetEmail() { return email; }
 	public Role GetRole() { return role; }
 	public int GetID() { return ID; }
+	public List<Course> GetTakenCourses() {
+		if (takenCourses == null) takenCourses = new ArrayList<>();
+		return takenCourses;
+	}
 
 	// Setters
 	public void SetName(String name) { this.name = name; }
 	public void SetEmail(String email) { this.email = email; }
 	public void SetRole(Role role) { this.role = role; }
 	public void SetID(int id) { this.ID = id; }
+	public void SetTakenCourses(List<Course> courses) { this.takenCourses = courses; }
 
 	@Override
 	public String toString()

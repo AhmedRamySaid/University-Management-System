@@ -1,6 +1,7 @@
 package ASU.CAIE.GUI.Views;
 
 import ASU.CAIE.Database.Dao.CourseDao;
+import ASU.CAIE.Database.DatabaseManager;
 import ASU.CAIE.model.Role;
 import ASU.CAIE.model.User;
 import ASU.CAIE.model.Course;
@@ -29,15 +30,18 @@ public class CoursesView {
 
         User user = SessionManager.getInstance().getCurrentUser();
         if (user == null) return new Label("Not logged in");
-        CourseDao courseDao = new CourseDao();
         List<Course> courses;
 
         if (user.GetRole() == Role.PROFESSOR) {
-            // Fetches courses where professor_id matches the logged-in user[cite: 13, 16]
-            courses = courseDao.getCoursesByProfessor(user.GetID());
+            // Fetches courses where professor_id matches the logged-in user
+            courses = user.GetTakenCourses();
         } else {
-            // Students see all courses available in the system[cite: 13, 16]
-            courses = courseDao.getAllCourses();
+            // Students see all courses available in the system
+			if (Course.courseList != null) courses = Course.courseList;
+            else {
+				courses = DatabaseManager.CourseDaoInstance.getAllCourses();
+				Course.courseList = courses; // Cache for future use
+			}
         }
 
         Label title = styledLabel("Courses", 26, text());

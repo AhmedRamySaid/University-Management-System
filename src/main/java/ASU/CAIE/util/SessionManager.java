@@ -1,6 +1,11 @@
 package ASU.CAIE.util;
 
+import ASU.CAIE.Database.DatabaseManager;
+import ASU.CAIE.model.Course;
+import ASU.CAIE.model.Role;
 import ASU.CAIE.model.User;
+
+import java.util.List;
 
 public class SessionManager {
     private static SessionManager instance;
@@ -17,6 +22,8 @@ public class SessionManager {
 
     public void login(User user) {
         this.currentUser = user;
+		if (user.GetRole() == Role.STUDENT) getStudentCourses();
+		if (user.GetRole() == Role.PROFESSOR) getProfessorCourses();
     }
 
     public void logout() {
@@ -30,4 +37,14 @@ public class SessionManager {
     public boolean isLoggedIn() {
         return currentUser != null;
     }
+
+	private void getStudentCourses () {
+		List<Course> courses = DatabaseManager.CourseDaoInstance.getCoursesByStudent(currentUser.GetID());
+		currentUser.SetTakenCourses(courses);
+	}
+
+	private void getProfessorCourses () {
+		List<Course> courses = DatabaseManager.CourseDaoInstance.getCoursesByProfessor(currentUser.GetID());
+		currentUser.SetTakenCourses(courses);
+	}
 }

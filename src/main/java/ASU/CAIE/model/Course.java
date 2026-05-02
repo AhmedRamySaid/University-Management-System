@@ -1,11 +1,15 @@
 package ASU.CAIE.model;
 
+import java.util.List;
+
 public class Course {
     private int courseId;
     private String name;
     private int instructorId;
     private String schedule;
     private int credits;  // new add
+
+	public static List<Course> courseList;
 
     public Course() {}
 
