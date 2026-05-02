@@ -6,23 +6,21 @@ public class Grade {
     private int gradeId;
     private int studentId;
     private int courseId;
-    private int instructorId;
-    private double score;
+    private int score;
+	private float gpa;
     private String letterGrade;
     private String semester;
-    private LocalDateTime submittedAt;
 
     public Grade() {}
 
-    public Grade(int gradeId, int studentId, int courseId, int instructorId, double score, String letterGrade, String semester, LocalDateTime submittedAt) {
+    public Grade(int gradeId, int studentId, int courseId, int score,  String semester) {
         this.gradeId = gradeId;
         this.studentId = studentId;
         this.courseId = courseId;
-        this.instructorId = instructorId;
         this.score = score;
-        this.letterGrade = letterGrade;
         this.semester = semester;
-        this.submittedAt = submittedAt;
+
+		updateGrade();
     }
 
     public int getGradeId() { return gradeId; }
@@ -34,18 +32,54 @@ public class Grade {
     public int getCourseId() { return courseId; }
     public void setCourseId(int courseId) { this.courseId = courseId; }
 
-    public int getInstructorId() { return instructorId; }
-    public void setInstructorId(int instructorId) { this.instructorId = instructorId; }
-
-    public double getScore() { return score; }
-    public void setScore(double score) { this.score = score; }
+    public int getScore() { return score; }
+    public void setScore(int score) { this.score = score; }
 
     public String getLetterGrade() { return letterGrade; }
-    public void setLetterGrade(String letterGrade) { this.letterGrade = letterGrade; }
 
     public String getSemester() { return semester; }
     public void setSemester(String semester) { this.semester = semester; }
 
-    public LocalDateTime getSubmittedAt() { return submittedAt; }
-    public void setSubmittedAt(LocalDateTime submittedAt) { this.submittedAt = submittedAt; }
+	public void updateGrade() {
+		if (score == 0) {
+			letterGrade = "NA";
+			gpa = 0.0f;
+		} else if (score < 60) {
+			letterGrade = "F";
+			gpa = 0.0f;
+		} else if (score < 64) {
+			letterGrade = "D";
+			gpa = 1.0f;
+		} else if (score < 67) {
+			letterGrade = "D+";
+			gpa = 1.3f;
+		} else if (score < 70) {
+			letterGrade = "C-";
+			gpa = 1.7f;
+		} else if (score < 73) {
+			letterGrade = "C";
+			gpa = 2.0f;
+		} else if (score < 76) {
+			letterGrade = "C+";
+			gpa = 2.3f;
+		} else if (score < 80) {
+			letterGrade = "B-";
+			gpa = 2.7f;
+		} else if (score < 84) {
+			letterGrade = "B";
+			gpa = 3.0f;
+		} else if (score < 89) {
+			letterGrade = "B+";
+			gpa = 3.3f;
+		} else if (score < 93) {
+			letterGrade = "A-";
+			gpa = 3.7f;
+		} else if (score < 97) {
+			letterGrade = "A";
+			gpa = 4.0f;
+		} else {
+			letterGrade = "A+";
+			gpa = 4.0f;
+		}
+	}
 }

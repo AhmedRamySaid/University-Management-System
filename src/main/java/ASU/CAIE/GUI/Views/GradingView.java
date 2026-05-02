@@ -79,7 +79,7 @@ public class GradingView {
             try {
                 int    studentId   = Integer.parseInt(fStudentId.getText().trim());
                 int    courseId    = Integer.parseInt(fCourseId.getText().trim());
-                double score       = Double.parseDouble(fScore.getText().trim());
+                int score          =  Integer.parseInt(fScore.getText().trim());
                 String semester    = fSemester.getText().trim();
 
                 // Validation
@@ -98,7 +98,6 @@ public class GradingView {
                 Grade grade = new Grade();
                 grade.setStudentId(studentId);
                 grade.setCourseId(courseId);
-                grade.setInstructorId(user.GetID());
                 grade.setScore(score);
                 grade.setSemester(semester);
 
