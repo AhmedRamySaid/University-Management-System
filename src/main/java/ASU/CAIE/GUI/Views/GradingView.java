@@ -1,5 +1,6 @@
 package ASU.CAIE.GUI.Views;
 
+import ASU.CAIE.Database.DatabaseManager;
 import ASU.CAIE.model.User;
 import ASU.CAIE.model.Grade;
 import ASU.CAIE.util.SessionManager;
@@ -94,15 +95,13 @@ public class GradingView {
                     return;
                 }
 
-
                 Grade grade = new Grade();
                 grade.setStudentId(studentId);
                 grade.setCourseId(courseId);
                 grade.setScore(score);
                 grade.setSemester(semester);
 
-				// todo: implement
-                boolean ok = true;
+				boolean ok = DatabaseManager.GradeDaoInstance.saveGrade(grade);
 
                 if (ok) {
                     resultLabel.setStyle("-fx-text-fill: #2ecc71; -fx-font-size: 13px;");

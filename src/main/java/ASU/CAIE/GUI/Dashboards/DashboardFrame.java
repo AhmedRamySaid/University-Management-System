@@ -134,7 +134,7 @@ public class DashboardFrame {
             );
         }
 
-        if ("PROFESSOR".equals(currentRole) || "INSTRUCTOR".equals(currentRole)) {
+        if ("PROFESSOR".equals(currentRole)) {
             navSection.getChildren().add(
                     navBtn("Submit Grade", "✎", "Submit Grade".equals(activeLink), () -> switchContent("Submit Grade"))
             );
@@ -161,7 +161,6 @@ public class DashboardFrame {
                         "-fx-border-width: 1 0 0 0;"
         );
 
-        // User info فوق الـ Sign Out
         if (currentUser != null) {
             HBox userRow = new HBox(12);
             userRow.setAlignment(Pos.CENTER_LEFT);
@@ -186,7 +185,6 @@ public class DashboardFrame {
             userText.getChildren().addAll(uName, uRole);
             userRow.getChildren().addAll(avPane, userText);
 
-            // User row اتضاف الأول — Sign Out تحته
             bottomSection.getChildren().add(userRow);
         }
 
@@ -218,7 +216,6 @@ public class DashboardFrame {
             SceneManager.switchToPortal();
         });
 
-        // Sign Out اتضاف تاني — يعني تحت الـ user info
         bottomSection.getChildren().add(logoutBtn);
 
         sidebar.getChildren().addAll(brandBox, navSection, spacer, bottomSection);

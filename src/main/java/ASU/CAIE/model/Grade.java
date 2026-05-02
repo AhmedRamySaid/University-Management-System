@@ -1,7 +1,5 @@
 package ASU.CAIE.model;
 
-import java.time.LocalDateTime;
-
 public class Grade {
     private int gradeId;
     private int studentId;
@@ -11,7 +9,7 @@ public class Grade {
     private String letterGrade;
     private String semester;
 
-    public Grade() {}
+    public Grade() { }
 
     public Grade(int gradeId, int studentId, int courseId, int score,  String semester) {
         this.gradeId = gradeId;
@@ -33,7 +31,10 @@ public class Grade {
     public void setCourseId(int courseId) { this.courseId = courseId; }
 
     public int getScore() { return score; }
-    public void setScore(int score) { this.score = score; }
+    public void setScore(int score) {
+		this.score = score;
+		updateGrade();
+	}
 
     public String getLetterGrade() { return letterGrade; }
 

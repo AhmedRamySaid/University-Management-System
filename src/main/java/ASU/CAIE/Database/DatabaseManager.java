@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import ASU.CAIE.Database.Dao.GradeDao;
 import ASU.CAIE.Database.Dao.UserDao;
 import ASU.CAIE.model.User;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -18,6 +19,7 @@ public class DatabaseManager {
 
 	public static User CurrentUser;
 	public static final UserDao UserDaoInstance = new UserDao();
+	public static final GradeDao GradeDaoInstance = new GradeDao();
 
 	public static Connection getConnection() throws SQLException {
 		return DriverManager.getConnection(URL, USER, PASSWORD);
