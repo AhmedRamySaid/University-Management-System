@@ -20,7 +20,7 @@ public class Student extends User {
 
 		for (Grade grade : courseGrades) {
 			totalPoints += grade.getGPA() * 1; // todo: add credits
-			totalCredits += 1;
+				totalCredits += 1;
 		}
 
 		return totalCredits > 0 ? totalPoints / totalCredits : 0.0;
