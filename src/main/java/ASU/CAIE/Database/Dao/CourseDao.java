@@ -80,7 +80,7 @@ public class CourseDao {
 	public void updateCourse(Course course) {
 		// 1. Define the SQL queries
 		String updateSql = "UPDATE courses SET name = ?, professor_id = ? WHERE course_id = ?";
-		String insertSql = "INSERT INTO courses (course_id, name, professor_id) VALUES (?, ?, ?)";
+		String insertSql = "INSERT INTO courses (name, professor_id) VALUES (?, ?)";
 
 		try (Connection conn = DatabaseManager.getConnection()) {
 			// Try to update the record first
@@ -94,9 +94,8 @@ public class CourseDao {
 				// 2. If no rows were updated, the ID doesn't exist, so we insert
 				if (rowsAffected == 0) {
 					try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
-						insertStmt.setInt(1, course.getCourseId());
-						insertStmt.setString(2, course.getName());
-						insertStmt.setInt(3, course.getInstructorId());
+						insertStmt.setString(1, course.getName());
+						insertStmt.setInt(2, course.getInstructorId());
 						insertStmt.executeUpdate();
 					}
 				}

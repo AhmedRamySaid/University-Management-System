@@ -6,14 +6,11 @@ public class Course {
     private int courseId;
     private String name;
     private int instructorId;
-    private String schedule;
     private int credits;  // new add
-
-	public static List<Course> courseList;
 
     public Course() {}
 
-    public Course(int courseId, String name, int instructorId, String schedule) {
+    public Course(String name, int courseId, int instructorId) {
         this.courseId = courseId;
         this.name = name;
         this.instructorId = instructorId;
