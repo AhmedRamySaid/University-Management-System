@@ -21,7 +21,6 @@ public class CourseDao {
                         rs.getInt("course_id"),
                         rs.getString("name"),
                         rs.getInt("professor_id"),
-                        "TBD",
                         0
                 ));
             }
@@ -41,7 +40,6 @@ public class CourseDao {
                         rs.getInt("course_id"),
                         rs.getString("name"),
                         rs.getInt("professor_id"),
-                        "TBD",
                         0
                 ));
             }
@@ -69,7 +67,6 @@ public class CourseDao {
 						rs.getInt("course_id"),
 						rs.getString("name"),
 						rs.getInt("professor_id"),
-						"TBD", // Placeholder for department/description if not in DB
 						0      // Placeholder for credits
 				);
 				courses.add(course);
@@ -78,5 +75,34 @@ public class CourseDao {
 			e.printStackTrace();
 		}
 		return courses;
+	}
+
+	public void updateCourse(Course course) {
+		// 1. Define the SQL queries
+		String updateSql = "UPDATE courses SET name = ?, professor_id = ? WHERE course_id = ?";
+		String insertSql = "INSERT INTO courses (course_id, name, professor_id) VALUES (?, ?, ?)";
+
+		try (Connection conn = DatabaseManager.getConnection()) {
+			// Try to update the record first
+			try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
+				updateStmt.setString(1, course.getName());
+				updateStmt.setInt(2, course.getInstructorId());
+				updateStmt.setInt(3, course.getCourseId());
+
+				int rowsAffected = updateStmt.executeUpdate();
+
+				// 2. If no rows were updated, the ID doesn't exist, so we insert
+				if (rowsAffected == 0) {
+					try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+						insertStmt.setInt(1, course.getCourseId());
+						insertStmt.setString(2, course.getName());
+						insertStmt.setInt(3, course.getInstructorId());
+						insertStmt.executeUpdate();
+					}
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

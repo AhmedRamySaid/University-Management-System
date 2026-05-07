@@ -17,15 +17,13 @@ public class Course {
         this.courseId = courseId;
         this.name = name;
         this.instructorId = instructorId;
-        this.schedule = schedule;
     }
 
     // new add
-    public Course(int courseId, String name, int instructorId, String schedule, int credits) {
+    public Course(int courseId, String name, int instructorId, int credits) {
         this.courseId = courseId;
         this.name = name;
         this.instructorId = instructorId;
-        this.schedule = schedule;
         this.credits = credits;
     }
 
@@ -37,9 +35,6 @@ public class Course {
 
     public int getInstructorId() { return instructorId; }
     public void setInstructorId(int instructorId) { this.instructorId = instructorId; }
-
-    public String getSchedule() { return schedule; }
-    public void setSchedule(String schedule) { this.schedule = schedule; }
 
     // new add
     public int getCredits() { return credits; }
