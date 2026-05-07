@@ -41,6 +41,37 @@ public class UserDao {
 		}
 	}
 
+	public Optional<User> GetUser(int id) {
+		String sql = "SELECT user_id, name, email, password_hash, role FROM users WHERE user_id = ?";
+
+		try (Connection conn = DatabaseManager.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			pstmt.setInt(1, id);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					User user;
+					// Convert the DB string back to Java Enum
+					Role role = Role.valueOf(rs.getString("role").toUpperCase());
+					if (role == Role.STUDENT) user = new Student();
+					else user = new User();
+
+					user.SetName(rs.getString("name"));
+					user.SetEmail(rs.getString("email"));
+					user.SetID(rs.getInt("user_id"));
+					user.SetRole(role);
+
+					return Optional.of(user);
+				}
+			}
+		} catch (SQLException e) {
+			System.err.println("Database error while fetching user: " + e.getMessage());
+		}
+
+		return Optional.empty();
+	}
+
 	public Optional<User> GetUser(String email) {
 		String sql = "SELECT user_id, name, email, password_hash, role FROM users WHERE email = ?";
 
