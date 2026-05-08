@@ -23,6 +23,7 @@ public class SessionManager {
 		if (user instanceof Student) {
 			getStudentCourses();
 			getStudentGrades();
+			getStudentEnrollments();
 		}
 		if (user.GetRole() == Role.PROFESSOR) getProfessorCourses();
     }
@@ -47,6 +48,11 @@ public class SessionManager {
 	private void getStudentGrades () {
 		List<Grade> grades = DatabaseManager.GradeDaoInstance.getGradesForStudent(currentUser.GetID());
 		((Student)currentUser).SetCourseGrades(grades);
+	}
+
+	private void getStudentEnrollments() {
+		List<Enrollment> enrollments = DatabaseManager.EnrollmentDaoInstance.getEnrollmentsByStudent(currentUser.GetID());
+		((Student)currentUser).setEnrollments(enrollments);
 	}
 
 	private void getProfessorCourses () {

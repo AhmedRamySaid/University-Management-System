@@ -10,117 +10,176 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static ASU.CAIE.Database.PasswordUtils.hashPassword;
 
 public class UserDao {
-	public boolean createUser(User user, String password) {
-		// tell Postgres to cast that string into ENUM type.
-		String sql = "INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, ?::user_role)";
 
-		// Using try-with-resources ensures the connection closes automatically
-		try (Connection conn = DatabaseManager.getConnection();
-			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    public boolean createUser(User user, String password) {
 
-			pstmt.setString(1, user.GetName());
-			pstmt.setString(2, user.GetEmail());
+        String sql = "INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, ?::user_role)";
 
-			String hashedPassword = hashPassword(password);
-			pstmt.setString(3, hashedPassword);
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-			// sends the enum as a lowercase string
-			pstmt.setString(4, user.GetRole().name().toLowerCase());
+            pstmt.setString(1, user.GetName());
+            pstmt.setString(2, user.GetEmail());
 
-			int rowsInserted = pstmt.executeUpdate();
-			return rowsInserted > 0;
+            pstmt.setString(3, hashPassword(password));
 
-		} catch (SQLException e) {
-			System.err.println("Database error: " + e.getMessage());
-			return false;
-		}
-	}
+            // ✅ DB uses lowercase enum values
+            pstmt.setString(4, user.GetRole().name().toLowerCase());
 
-	public Optional<User> GetUser(int id) {
-		String sql = "SELECT user_id, name, email, password_hash, role FROM users WHERE user_id = ?";
+            return pstmt.executeUpdate() > 0;
 
-		try (Connection conn = DatabaseManager.getConnection();
-			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
-			pstmt.setInt(1, id);
+    private Role safeParseRole(String dbValue) {
+        return Role.valueOf(dbValue.trim().toUpperCase());
+    }
 
-			try (ResultSet rs = pstmt.executeQuery()) {
-				if (rs.next()) {
-					User user;
-					// Convert the DB string back to Java Enum
-					Role role = Role.valueOf(rs.getString("role").toUpperCase());
-					if (role == Role.STUDENT) user = new Student();
-					else user = new User();
+    public Optional<User> GetUser(int id) {
 
-					user.SetName(rs.getString("name"));
-					user.SetEmail(rs.getString("email"));
-					user.SetID(rs.getInt("user_id"));
-					user.SetRole(role);
+        String sql = "SELECT user_id, name, email, password_hash, role FROM users WHERE user_id = ?";
 
-					return Optional.of(user);
-				}
-			}
-		} catch (SQLException e) {
-			System.err.println("Database error while fetching user: " + e.getMessage());
-		}
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-		return Optional.empty();
-	}
+            pstmt.setInt(1, id);
 
-	public Optional<User> GetUser(String email) {
-		String sql = "SELECT user_id, name, email, password_hash, role FROM users WHERE email = ?";
+            try (ResultSet rs = pstmt.executeQuery()) {
 
-		try (Connection conn = DatabaseManager.getConnection();
-			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                if (rs.next()) {
 
-			pstmt.setString(1, email);
+                    Role role = safeParseRole(rs.getString("role"));
 
-			try (ResultSet rs = pstmt.executeQuery()) {
-				if (rs.next()) {
-					User user;
-					// Convert the DB string back to Java Enum
-					Role role = Role.valueOf(rs.getString("role").toUpperCase());
-					if (role == Role.STUDENT) user = new Student();
-					else user = new User();
+                    User user = (role == Role.STUDENT) ? new Student() : new User();
 
-					user.SetName(rs.getString("name"));
-					user.SetEmail(rs.getString("email"));
-					user.SetID(rs.getInt("user_id"));
-					user.SetRole(role);
+                    user.SetID(rs.getInt("user_id"));
+                    user.SetName(rs.getString("name"));
+                    user.SetEmail(rs.getString("email"));
+                    user.SetRole(role);
 
-					return Optional.of(user);
-				}
-			}
-		} catch (SQLException e) {
-			System.err.println("Database error while fetching user: " + e.getMessage());
-		}
+                    return Optional.of(user);
+                }
+            }
 
-		return Optional.empty();
-	}
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-	public boolean VerifyUserPassword(String email, String plainTextPassword) {
-		String sql = "SELECT password_hash FROM users WHERE email = ?";
+        return Optional.empty();
+    }
 
-		try (Connection conn = DatabaseManager.getConnection();
-			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    public Optional<User> GetUser(String email) {
 
-			pstmt.setString(1, email);
+        String sql = "SELECT user_id, name, email, password_hash, role FROM users WHERE email = ?";
 
-			try (ResultSet rs = pstmt.executeQuery()) {
-				if (rs.next()) {
-					String storedHash = rs.getString("password_hash");
-					return PasswordUtils.verifyPassword(plainTextPassword, storedHash);
-				}
-			}
-		} catch (SQLException e) {
-			System.err.println("Database error while verifying password: " + e.getMessage());
-		}
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-		return false;
-	}
+            pstmt.setString(1, email);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+
+                if (rs.next()) {
+
+                    Role role = safeParseRole(rs.getString("role"));
+
+                    User user = (role == Role.STUDENT) ? new Student() : new User();
+
+                    user.SetID(rs.getInt("user_id"));
+                    user.SetName(rs.getString("name"));
+                    user.SetEmail(rs.getString("email"));
+                    user.SetRole(role);
+
+                    return Optional.of(user);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
+
+    public boolean VerifyUserPassword(String email, String password) {
+
+        String sql = "SELECT password_hash FROM users WHERE email = ?";
+
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, email);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+
+                if (rs.next()) {
+                    return PasswordUtils.verifyPassword(password, rs.getString("password_hash"));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public List<User> GetAllUsers() {
+
+        List<User> users = new ArrayList<>();
+
+        String sql = "SELECT user_id, name, email, role FROM users";
+
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+
+                Role role = safeParseRole(rs.getString("role"));
+
+                User user = (role == Role.STUDENT) ? new Student() : new User();
+
+                user.SetID(rs.getInt("user_id"));
+                user.SetName(rs.getString("name"));
+                user.SetEmail(rs.getString("email"));
+                user.SetRole(role);
+
+                users.add(user);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return users;
+    }
+
+    public boolean UpdateUserRole(int userId, Role role) {
+
+        String sql = "UPDATE users SET role = ?::user_role WHERE user_id = ?";
+
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, role.name().toLowerCase()); // DB expects lowercase
+            pstmt.setInt(2, userId);
+
+            return pstmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
