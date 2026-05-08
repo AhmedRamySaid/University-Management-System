@@ -1,0 +1,126 @@
+package ASU.CAIE.Database.Dao;
+
+import ASU.CAIE.Database.DatabaseManager;
+import ASU.CAIE.Database.PasswordUtils;
+import ASU.CAIE.model.Role;
+import ASU.CAIE.model.Student;
+import ASU.CAIE.model.User;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Optional;
+
+import static ASU.CAIE.Database.PasswordUtils.hashPassword;
+
+public class UserDao {
+	public boolean createUser(User user, String password) {
+		// tell Postgres to cast that string into ENUM type.
+		String sql = "INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, ?::user_role)";
+
+		// Using try-with-resources ensures the connection closes automatically
+		try (Connection conn = DatabaseManager.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			pstmt.setString(1, user.GetName());
+			pstmt.setString(2, user.GetEmail());
+
+			String hashedPassword = hashPassword(password);
+			pstmt.setString(3, hashedPassword);
+
+			// sends the enum as a lowercase string
+			pstmt.setString(4, user.GetRole().name().toLowerCase());
+
+			int rowsInserted = pstmt.executeUpdate();
+			return rowsInserted > 0;
+
+		} catch (SQLException e) {
+			System.err.println("Database error: " + e.getMessage());
+			return false;
+		}
+	}
+
+	public Optional<User> GetUser(int id) {
+		String sql = "SELECT user_id, name, email, password_hash, role FROM users WHERE user_id = ?";
+
+		try (Connection conn = DatabaseManager.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			pstmt.setInt(1, id);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					User user;
+					// Convert the DB string back to Java Enum
+					Role role = Role.valueOf(rs.getString("role").toUpperCase());
+					if (role == Role.STUDENT) user = new Student();
+					else user = new User();
+
+					user.SetName(rs.getString("name"));
+					user.SetEmail(rs.getString("email"));
+					user.SetID(rs.getInt("user_id"));
+					user.SetRole(role);
+
+					return Optional.of(user);
+				}
+			}
+		} catch (SQLException e) {
+			System.err.println("Database error while fetching user: " + e.getMessage());
+		}
+
+		return Optional.empty();
+	}
+
+	public Optional<User> GetUser(String email) {
+		String sql = "SELECT user_id, name, email, password_hash, role FROM users WHERE email = ?";
+
+		try (Connection conn = DatabaseManager.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			pstmt.setString(1, email);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					User user;
+					// Convert the DB string back to Java Enum
+					Role role = Role.valueOf(rs.getString("role").toUpperCase());
+					if (role == Role.STUDENT) user = new Student();
+					else user = new User();
+
+					user.SetName(rs.getString("name"));
+					user.SetEmail(rs.getString("email"));
+					user.SetID(rs.getInt("user_id"));
+					user.SetRole(role);
+
+					return Optional.of(user);
+				}
+			}
+		} catch (SQLException e) {
+			System.err.println("Database error while fetching user: " + e.getMessage());
+		}
+
+		return Optional.empty();
+	}
+
+	public boolean VerifyUserPassword(String email, String plainTextPassword) {
+		String sql = "SELECT password_hash FROM users WHERE email = ?";
+
+		try (Connection conn = DatabaseManager.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			pstmt.setString(1, email);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					String storedHash = rs.getString("password_hash");
+					return PasswordUtils.verifyPassword(plainTextPassword, storedHash);
+				}
+			}
+		} catch (SQLException e) {
+			System.err.println("Database error while verifying password: " + e.getMessage());
+		}
+
+		return false;
+	}
+}
