@@ -5,12 +5,19 @@ import java.util.List;
 
 public class Student extends User {
 	private List<Grade> courseGrades;
+	private List<Enrollment> enrollments;
 
 	public List<Grade> GetCourseGrades() {
 		if (courseGrades == null) courseGrades = new ArrayList<>();
 		return courseGrades;
 	}
 	public void SetCourseGrades(List<Grade> courseGrades) { this.courseGrades = courseGrades; }
+
+	public List<Enrollment> getEnrollments() {
+		if (enrollments == null) enrollments = new ArrayList<>();
+		return enrollments;
+	}
+	public void setEnrollments(List<Enrollment> enrollments) { this.enrollments = enrollments; }
 
 	public double CalculateGPA() {
 		if (courseGrades == null || courseGrades.isEmpty()) return 0.0;

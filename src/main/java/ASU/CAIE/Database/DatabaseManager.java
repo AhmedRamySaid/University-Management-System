@@ -1,9 +1,11 @@
 package ASU.CAIE.Database;
 
 import ASU.CAIE.Database.AsyncDao.AsyncCourseDao;
+import ASU.CAIE.Database.AsyncDao.AsyncEnrollmentDao;
 import ASU.CAIE.Database.AsyncDao.AsyncGradeDao;
 import ASU.CAIE.Database.AsyncDao.AsyncUserDao;
 import ASU.CAIE.Database.Dao.CourseDao;
+import ASU.CAIE.Database.Dao.EnrollmentDao;
 import ASU.CAIE.Database.Dao.GradeDao;
 import ASU.CAIE.Database.Dao.UserDao;
 import ASU.CAIE.model.User;
@@ -39,11 +41,13 @@ public class DatabaseManager {
 	public static final UserDao   UserDaoInstance   = new UserDao();
 	public static final GradeDao  GradeDaoInstance  = new GradeDao();
 	public static final CourseDao CourseDaoInstance = new CourseDao();
+	public static final EnrollmentDao EnrollmentDaoInstance = new EnrollmentDao();
 
 	// Async facades — use these from UI code
 	public static final AsyncCourseDao Courses = new AsyncCourseDao();
 	public static final AsyncUserDao Users   = new AsyncUserDao();
 	public static final AsyncGradeDao Grades  = new AsyncGradeDao();
+	public static final AsyncEnrollmentDao Enrollments = new AsyncEnrollmentDao();
 
 	public static Connection getConnection() throws SQLException {
 		return DriverManager.getConnection(URL, USER, PASSWORD);

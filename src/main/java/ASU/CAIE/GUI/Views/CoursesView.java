@@ -1,9 +1,8 @@
 package ASU.CAIE.GUI.Views;
 
 import ASU.CAIE.Database.DatabaseManager;
-import ASU.CAIE.model.Role;
-import ASU.CAIE.model.User;
-import ASU.CAIE.model.Course;
+import ASU.CAIE.model.*;
+import ASU.CAIE.util.SceneManager;
 import ASU.CAIE.util.SessionManager;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -38,7 +37,10 @@ public class CoursesView {
 		content.setStyle("-fx-background-color: transparent;");
 
 		User user = SessionManager.getInstance().getCurrentUser();
-		if (user == null) return new Label("Not logged in");
+		if (user == null) {
+			Platform.runLater(SceneManager::switchToPortal);
+			return new Label("Redirecting to login...");
+		}
 
 		boolean isAdmin = user.GetRole() == Role.ADMIN;
 
@@ -311,6 +313,62 @@ public class CoursesView {
 			buttonRow.setAlignment(Pos.CENTER_LEFT);
 			tableBox.getChildren().addAll(tableTitle, buttonRow, table);
 
+		} else if (user.GetRole() == Role.STUDENT) {
+			TableColumn<Course, Void> colEnroll = new TableColumn<>("Enrollment");
+			colEnroll.setCellFactory(tc -> new TableCell<>() {
+				private final Button btn = new Button();
+				{
+					btn.setStyle("-fx-font-size: 11px; -fx-padding: 4 12 4 12; -fx-background-radius: 6;");
+				}
+				@Override
+				protected void updateItem(Void item, boolean empty) {
+					super.updateItem(item, empty);
+					if (empty) {
+						setGraphic(null);
+					} else {
+						Course course = getTableView().getItems().get(getIndex());
+						Student student = (Student) user;
+
+						// Check if already enrolled
+						boolean alreadyEnrolled = student.GetTakenCourses().stream()
+								.anyMatch(c -> c.getCourseId() == course.getCourseId());
+
+						// Check if pending request
+						Optional<Enrollment> enrollment = student.getEnrollments().stream()
+								.filter(e -> e.getCourseId() == course.getCourseId())
+								.findFirst();
+
+						if (alreadyEnrolled) {
+							btn.setText("Enrolled");
+							btn.setDisable(true);
+							btn.setStyle("-fx-background-color: #ecfdf5; -fx-text-fill: #065f46; -fx-opacity: 1.0;");
+						} else if (enrollment.isPresent()) {
+							btn.setText(enrollment.get().getStatus().name());
+							btn.setDisable(true);
+							btn.setStyle("-fx-background-color: #fffbeb; -fx-text-fill: #d97706; -fx-opacity: 1.0;");
+						} else {
+							btn.setText("Request");
+							btn.setDisable(false);
+							btn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand;");
+							btn.setOnAction(e -> {
+								btn.setDisable(true);
+								DatabaseManager.Enrollments.requestEnrollment(student.GetID(), course.getCourseId())
+										.thenAcceptAsync(success -> {
+											if (success) {
+												student.getEnrollments().add(new Enrollment(student.GetID(), course.getCourseId(), EnrollmentStatus.PENDING));
+												table.refresh();
+											} else {
+												btn.setDisable(false);
+											}
+										}, Platform::runLater);
+							});
+						}
+						setGraphic(btn);
+					}
+				}
+			});
+			table.getColumns().add(colEnroll);
+			tableBox.getChildren().addAll(tableTitle, table);
 		} else {
 			tableBox.getChildren().addAll(tableTitle, table);
 		}

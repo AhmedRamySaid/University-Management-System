@@ -5,11 +5,17 @@ import ASU.CAIE.util.SessionManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 import static ASU.CAIE.GUI.Helpers.ComponentFactory.*;
 import static ASU.CAIE.GUI.Helpers.ThemeManager.*;
@@ -66,6 +72,21 @@ public class AdminDashboardView {
 
         HBox actionCards = new HBox(16);
         VBox manageCard  = buildActionCard("Manage Users",      "Add, edit or remove user accounts.",   "#3b82f6", "👤");
+        //manageCard functionality
+        manageCard.setOnMouseClicked(e -> {
+
+            ManageUsersView manageUsersView = new ManageUsersView();
+
+            Scene scene = new Scene(
+                (Parent) manageUsersView.build(),
+                1200,
+                800
+            );
+
+            Stage stage = (Stage) manageCard.getScene().getWindow();
+            stage.setScene(scene);
+});
+
         VBox logsCard    = buildActionCard("View System Logs",  "Monitor activity and error reports.",  "#8b5cf6", "📋");
         VBox dbCard      = buildActionCard("Database Settings", "Configure database connections.",      "#059669", "🗄");
         HBox.setHgrow(manageCard, Priority.ALWAYS);
