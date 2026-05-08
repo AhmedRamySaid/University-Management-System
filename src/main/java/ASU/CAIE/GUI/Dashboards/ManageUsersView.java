@@ -199,7 +199,9 @@ public class ManageUsersView {
         Task<List<User>> loadTask = new Task<>() {
             @Override
             protected List<User> call() {
-                return DatabaseManager.UserDaoInstance.GetAllUsers();
+                List<User> users = DatabaseManager.UserDaoInstance.GetAllUsers();
+                users.removeIf(user -> user.GetRole() == Role.ADMIN);
+                return users;
             }
         };
 
