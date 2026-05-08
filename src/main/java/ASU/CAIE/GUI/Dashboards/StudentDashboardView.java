@@ -69,15 +69,11 @@ public class StudentDashboardView {
         HBox.setHgrow(gradeCard,  Priority.ALWAYS);
         stats.getChildren().addAll(gpaCard, courseCard, gradeCard);
 
-        // ── Schedule Section ─────────────────────────────────────────────────
-        VBox scheduleSection = new VBox(14);
-        scheduleSection.getChildren().addAll(buildSectionHeader("Your Schedule", "Courses registered this semester"), buildCourseTable(courses));
-
         // ── Grades Section ───────────────────────────────────────────────────
         VBox gradesSection = new VBox(14);
         gradesSection.getChildren().addAll(buildSectionHeader("Recent Grades", "Academic performance overview"), buildGradesTable(grades));
 
-        content.getChildren().addAll(header, stats, scheduleSection, gradesSection);
+        content.getChildren().addAll(header, stats, gradesSection);
         return content;
     }
 
@@ -134,14 +130,11 @@ public class StudentDashboardView {
         TableColumn<Course, String>  colName    = new TableColumn<>("Course Name");
         colName.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        TableColumn<Course, String>  colSched   = new TableColumn<>("Schedule");
-        colSched.setCellValueFactory(new PropertyValueFactory<>("schedule"));
-
         TableColumn<Course, Integer> colCredits = new TableColumn<>("Credits");
         colCredits.setCellValueFactory(new PropertyValueFactory<>("credits"));
         colCredits.setMaxWidth(100);
 
-        table.getColumns().addAll(colName, colSched, colCredits);
+        table.getColumns().addAll(colName, colCredits);
         table.getItems().setAll(courses);
         return table;
     }

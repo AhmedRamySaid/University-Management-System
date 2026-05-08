@@ -67,7 +67,7 @@ public class CourseDao {
 						rs.getInt("course_id"),
 						rs.getString("name"),
 						rs.getInt("professor_id"),
-						0      // Placeholder for credits
+						1      // Placeholder for credits
 				);
 				courses.add(course);
 			}

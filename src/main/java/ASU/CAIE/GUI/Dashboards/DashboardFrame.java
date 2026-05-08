@@ -54,7 +54,6 @@ public class DashboardFrame {
 
 		Supplier<Node> newSupplier = () -> switch (section) {
 			case "Grades"       -> new GradesView().build();
-			case "Performance"  -> new PerformanceDashboardView().build();
 			case "Submit Grade" -> new GradingView().build();
 			case "Courses"      -> new CoursesView().build();
 			case "Profile"      -> new ProfileView().build();
@@ -128,9 +127,6 @@ public class DashboardFrame {
 		if ("STUDENT".equals(currentRole)) {
 			navSection.getChildren().add(
 					navBtn("Grades", "◈", "Grades".equals(activeLink), () -> switchContent("Grades"))
-			);
-			navSection.getChildren().add(
-					navBtn("Performance", "↗", "Performance".equals(activeLink), () -> switchContent("Performance"))
 			);
 		}
 
